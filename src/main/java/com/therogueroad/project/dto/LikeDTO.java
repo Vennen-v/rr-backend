@@ -1,6 +1,6 @@
 package com.therogueroad.project.dto;
 
-import com.therogueroad.project.models.User;
+import com.therogueroad.project.models.Userr;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 public class LikeDTO {
 
     private Long likeId;
-    private User user;
+    private Userr user;
     private PostDTO post;
     private CommentDTO comment;
 }

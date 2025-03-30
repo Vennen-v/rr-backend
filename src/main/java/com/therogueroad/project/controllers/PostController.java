@@ -5,6 +5,8 @@ import com.therogueroad.project.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,8 +19,9 @@ public class PostController {
     private PostService postService;
 
     @PostMapping("/posts")
-    public ResponseEntity<PostDTO> createPost(@RequestBody PostDTO postDTO){
-        return new ResponseEntity<>(postService.createPost(postDTO), HttpStatus.CREATED);
+    public ResponseEntity<PostDTO> createPost(@RequestBody PostDTO postDTO, @AuthenticationPrincipal UserDetails userDetails){
+        String username = userDetails.getUsername();
+        return new ResponseEntity<>(postService.createPost(postDTO, username), HttpStatus.CREATED);
     }
 
     @GetMapping("/posts")

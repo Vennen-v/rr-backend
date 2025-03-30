@@ -3,7 +3,7 @@ package com.therogueroad.project.services;
 import com.therogueroad.project.dto.CommentDTO;
 import com.therogueroad.project.models.Comment;
 import com.therogueroad.project.models.Post;
-import com.therogueroad.project.models.User;
+import com.therogueroad.project.models.Userr;
 import com.therogueroad.project.repositories.CommentRepository;
 import com.therogueroad.project.repositories.PostRepository;
 import com.therogueroad.project.repositories.UserRepository;
@@ -33,7 +33,7 @@ public class CommentServiceImpl implements CommentService{
     public CommentDTO createComment(Long postId, CommentDTO commentDTO) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("Post Not Found"));
 
-        User user = new User("yoshi35", "yoshi@gmail.com", "meepmoop");
+        Userr user = new Userr("yoshi35", "yoshi@gmail.com", "meepmoop");
         user.setDisplayName("Yoshi Vennen");
         userRepository.save(user);
 
@@ -56,7 +56,7 @@ public class CommentServiceImpl implements CommentService{
     public CommentDTO createCommentReply(Long commentId, CommentDTO commentDTO) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new RuntimeException("Comment Not Found"));
 
-        User user = new User("yoshi35", "yoshi@gmail.com", "meepmoop");
+        Userr user = new Userr("yoshi35", "yoshi@gmail.com", "meepmoop");
         user.setDisplayName("Yoshi Vennen");
         userRepository.save(user);
 

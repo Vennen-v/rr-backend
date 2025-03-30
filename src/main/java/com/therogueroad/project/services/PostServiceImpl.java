@@ -3,7 +3,7 @@ package com.therogueroad.project.services;
 import com.therogueroad.project.dto.PostDTO;
 import com.therogueroad.project.models.Like;
 import com.therogueroad.project.models.Post;
-import com.therogueroad.project.models.User;
+import com.therogueroad.project.models.Userr;
 import com.therogueroad.project.repositories.PostRepository;
 import com.therogueroad.project.repositories.UserRepository;
 import org.modelmapper.ModelMapper;
@@ -26,12 +26,15 @@ public class PostServiceImpl implements PostService{
     private ModelMapper modelMapper;
 
     @Override
-    public PostDTO createPost(PostDTO postDTO) {
+    public PostDTO createPost(PostDTO postDTO, String username) {
         Post post = modelMapper.map(postDTO, Post.class);
 
-        User user = new User("yoshi35", "yoshi@gmail.com", "meepmoop");
-        user.setDisplayName("Yoshi Vennen");
-        userRepository.save(user);
+//        User user = new User("yoshi35", "yoshi@gmail.com", "meepmoop");
+//        user.setDisplayName("Yoshi Vennen");
+//        userRepository.save(user);
+
+        Userr user = userRepository.findByUserName(username);
+
 
         List<Post> userPost = user.getUserPosts();
 
@@ -61,7 +64,7 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public List<PostDTO> getPostsByUserId(Long userId) {
-         User user = userRepository.findById(userId).orElseThrow(()-> new RuntimeException("User Not Found"));
+         Userr user = userRepository.findById(userId).orElseThrow(()-> new RuntimeException("User Not Found"));
 
          List<Post> posts = user.getUserPosts();
 
