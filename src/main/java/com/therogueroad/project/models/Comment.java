@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -43,6 +44,7 @@ public class Comment {
     @OneToMany(mappedBy = "comment")
     private List<Like> likes = new ArrayList<>();
 
+    @CreationTimestamp
     private LocalDateTime createdAt;
 
     public void addCommentReply(Comment comment){
