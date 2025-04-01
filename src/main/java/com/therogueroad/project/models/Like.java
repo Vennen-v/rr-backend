@@ -1,9 +1,11 @@
 package com.therogueroad.project.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @NoArgsConstructor
@@ -20,12 +22,18 @@ public class Like {
     @JoinColumn(name = "user_id")
     private Userr user;
 
+    private String userName;
+
+    private String displayName;
+
     @ManyToOne
     @JoinColumn(name = "post_id")
+    @ToString.Exclude
     private Post post;
 
     @ManyToOne
     @JoinColumn(name = "comment_id")
+    @ToString.Exclude
     private Comment comment;
 
 }
