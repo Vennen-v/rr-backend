@@ -32,6 +32,8 @@ public class Post {
 
     private String profilePic;
 
+
+    @Lob
     private String content;
 
     @OneToMany(mappedBy = "post")

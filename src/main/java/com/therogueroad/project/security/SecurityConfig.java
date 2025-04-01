@@ -43,6 +43,13 @@ public class SecurityConfig {
         if (!manager.userExists("yoshi35")){
             manager.createUser(user);
         }
+        UserDetails user2 = User.withUsername("sward140")
+                    .password("{noop}meepmoop")
+                    .roles("USER")
+                    .build();
+        if (!manager.userExists("sward140")){
+            manager.createUser(user2);
+        }
         return manager;
     }
 
@@ -55,6 +62,12 @@ public class SecurityConfig {
                 Userr user = new Userr("yoshi35", "yoshi@gmail.com", "meepmoop");
                 user.setDisplayName("Yoshi Vennen");
                 userRepository.save(user);
+            }
+
+            if (!userRepository.existsByUserName("sward140")) {
+                Userr user2 = new Userr("sward140", "sward@gmail.com", "meepmoop");
+                user2.setDisplayName("Emma Sward");
+                userRepository.save(user2);
             }
         };
     }

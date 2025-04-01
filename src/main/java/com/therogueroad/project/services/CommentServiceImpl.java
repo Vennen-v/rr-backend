@@ -30,12 +30,15 @@ public class CommentServiceImpl implements CommentService{
     ModelMapper modelMapper;
 
     @Override
-    public CommentDTO createComment(Long postId, CommentDTO commentDTO) {
+    public CommentDTO createComment(Long postId, CommentDTO commentDTO, String username) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("Post Not Found"));
 
-        Userr user = new Userr("yoshi35", "yoshi@gmail.com", "meepmoop");
-        user.setDisplayName("Yoshi Vennen");
-        userRepository.save(user);
+//        Userr user = new Userr("yoshi35", "yoshi@gmail.com", "meepmoop");
+//        user.setDisplayName("Yoshi Vennen");
+//        userRepository.save(user);
+
+        Userr user = userRepository.findByUserName(username);
+
 
         Comment comment = modelMapper.map(commentDTO, Comment.class);
 
@@ -53,12 +56,15 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public CommentDTO createCommentReply(Long commentId, CommentDTO commentDTO) {
+    public CommentDTO createCommentReply(Long commentId, CommentDTO commentDTO, String username) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new RuntimeException("Comment Not Found"));
 
-        Userr user = new Userr("yoshi35", "yoshi@gmail.com", "meepmoop");
-        user.setDisplayName("Yoshi Vennen");
-        userRepository.save(user);
+//        Userr user = new Userr("yoshi35", "yoshi@gmail.com", "meepmoop");
+//        user.setDisplayName("Yoshi Vennen");
+//        userRepository.save(user);
+
+        Userr user = userRepository.findByUserName(username);
+
 
         Comment reply = modelMapper.map(commentDTO, Comment.class);
 
