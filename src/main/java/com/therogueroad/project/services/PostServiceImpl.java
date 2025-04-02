@@ -108,6 +108,20 @@ public class PostServiceImpl implements PostService{
         return modelMapper.map(post, PostDTO.class);
     }
 
+    @Override
+    public void bookmarkPost(Long postId, String username) {
+        Post post = postRepository.findById(postId).orElseThrow(()-> new RuntimeException("Post Not Found"));
+
+        Userr user = userRepository.findByUserName(username);
+
+        List<Post> userSavedList = user.getSavedPosts();
+
+        post.setSaves(post.getSaves() + 1);
+        postRepository.save(post);
+
+        userSavedList.add(post);
+    }
+
     // Create Get Current Users Post
 
 

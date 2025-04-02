@@ -22,7 +22,7 @@ public class PostDTO {
     private String profilePic;
     private List<LikeDTO> likes = new ArrayList<>();
     private List<CommentDTO> comments = new ArrayList<>();
-    private Long saves = null;
+    private Long saves = 0L;
     private LocalDateTime createdAt;
 
 }

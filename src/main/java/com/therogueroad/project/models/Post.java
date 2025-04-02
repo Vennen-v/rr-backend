@@ -42,7 +42,7 @@ public class Post {
     @OneToMany(mappedBy = "post")
     private List<Comment> comments;
 
-    private Long saves;
+    private Long saves = 0L;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

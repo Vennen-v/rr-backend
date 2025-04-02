@@ -19,4 +19,6 @@ public interface PostService {
     PostDTO getPost(Long postId);
 
     PostDTO findByKeyword(String keyword);
+
+    void bookmarkPost(Long postId, String username);
 }

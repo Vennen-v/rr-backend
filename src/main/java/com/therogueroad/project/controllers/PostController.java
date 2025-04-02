@@ -55,6 +55,13 @@ public class PostController {
         return new ResponseEntity<>(postService.updatePost(postDTO, postId), HttpStatus.OK);
     }
 
+    @PostMapping("/posts/save/{postId}")
+    public ResponseEntity<String> savePost(@PathVariable Long postId, @AuthenticationPrincipal UserDetails userDetails){
+        String username = userDetails.getUsername();
+        postService.bookmarkPost(postId, username);
+        return new ResponseEntity<>("Post saved to saved List", HttpStatus.OK);
+    }
+
 
     //Create Get Currents User's Post
 }
