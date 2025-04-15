@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -109,17 +110,49 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public void bookmarkPost(Long postId, String username) {
+    public PostDTO bookmarkPost(Long postId, String username) {
         Post post = postRepository.findById(postId).orElseThrow(()-> new RuntimeException("Post Not Found"));
 
         Userr user = userRepository.findByUserName(username);
 
-        List<Post> userSavedList = user.getSavedPosts();
+        System.out.println(username);
+
 
         post.setSaves(post.getSaves() + 1);
+
         postRepository.save(post);
 
-        userSavedList.add(post);
+        if (user.getSavedPosts() == null || user.getSavedPosts().isEmpty()) {
+            List<Post> newSavedList = new ArrayList<>();
+            user.setSavedPosts(newSavedList);
+            newSavedList.add(post);
+        } else {
+            user.getSavedPosts().add(post);
+        }
+
+        userRepository.save(user);
+
+        return modelMapper.map(post, PostDTO.class);
+    }
+
+    @Override
+    public List<PostDTO> getPostsByCurrentUser(Userr user) {
+        List<Post> posts = user.getUserPosts();
+
+        List<PostDTO> postDTOS = posts.stream().map(p -> modelMapper.map(p, PostDTO.class)).toList();
+
+        return postDTOS;
+    }
+
+    @Override
+    public List<PostDTO> getBookmarks(String username) {
+        Userr user = userRepository.findByUserName(username);
+        System.out.println(username);
+        List<Post> userSavedPosts = user.getSavedPosts();
+
+        List<PostDTO> postDTOS = userSavedPosts.stream().map(p -> modelMapper.map(p, PostDTO.class)).toList();
+
+        return postDTOS;
     }
 
     // Create Get Current Users Post

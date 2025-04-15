@@ -1,6 +1,8 @@
 package com.therogueroad.project.controllers;
 
 import com.therogueroad.project.dto.PostDTO;
+import com.therogueroad.project.models.Userr;
+import com.therogueroad.project.repositories.UserRepository;
 import com.therogueroad.project.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +19,9 @@ public class PostController {
 
     @Autowired
     private PostService postService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @PostMapping("/posts")
     public ResponseEntity<PostDTO> createPost(@RequestBody PostDTO postDTO, @AuthenticationPrincipal UserDetails userDetails){
@@ -55,13 +60,23 @@ public class PostController {
         return new ResponseEntity<>(postService.updatePost(postDTO, postId), HttpStatus.OK);
     }
 
-    @PostMapping("/posts/save/{postId}")
-    public ResponseEntity<String> savePost(@PathVariable Long postId, @AuthenticationPrincipal UserDetails userDetails){
+    @PutMapping("/posts/save/{postId}")
+    public ResponseEntity<PostDTO> savePost(@PathVariable Long postId, @AuthenticationPrincipal UserDetails userDetails){
         String username = userDetails.getUsername();
-        postService.bookmarkPost(postId, username);
-        return new ResponseEntity<>("Post saved to saved List", HttpStatus.OK);
+        return new ResponseEntity<>(postService.bookmarkPost(postId, username), HttpStatus.OK);
     }
 
-
     //Create Get Currents User's Post
+    @GetMapping("/posts/user/current")
+    public ResponseEntity<List<PostDTO>> getPostsByCurrentUser(@AuthenticationPrincipal UserDetails userDetails){
+        Userr user = userRepository.findByUserName(userDetails.getUsername());
+        return new ResponseEntity<>(postService.getPostsByCurrentUser(user), HttpStatus.FOUND);
+    }
+
+    @GetMapping("/user/bookmarks")
+    public ResponseEntity<List<PostDTO>> getUserSavedPosts(@AuthenticationPrincipal UserDetails userDetails){
+        String username = userDetails.getUsername();
+        return new ResponseEntity<>(postService.getBookmarks(username), HttpStatus.FOUND);
+    }
+
 }

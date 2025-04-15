@@ -44,10 +44,12 @@ public class Userr {
     @Column(name = "user_posts")
     private List<Post> userPosts = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<Post> savedPosts = new ArrayList<>();
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "saved_posts")
+    private List<Post> savedPosts;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @Column(name = "liked_posts")
     private List<Like> likedPosts = new ArrayList<>();
 
     @OneToMany
@@ -76,4 +78,5 @@ public class Userr {
         this.following = following;
         this.followers = followers;
     }
+
 }
