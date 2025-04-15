@@ -136,6 +136,17 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
+    public List<PostDTO> getBookmarks(String username) {
+        Userr user = userRepository.findByUserName(username);
+
+        List<Post> userSavedPosts = user.getSavedPosts();
+
+        List<PostDTO> postDTOS = userSavedPosts.stream().map(p -> modelMapper.map(p, PostDTO.class)).toList();
+
+        return postDTOS;
+    }
+
+    @Override
     public List<PostDTO> getPostsByCurrentUser(Userr user) {
         List<Post> posts = user.getUserPosts();
 
@@ -144,16 +155,6 @@ public class PostServiceImpl implements PostService{
         return postDTOS;
     }
 
-    @Override
-    public List<PostDTO> getBookmarks(String username) {
-        Userr user = userRepository.findByUserName(username);
-        System.out.println(username);
-        List<Post> userSavedPosts = user.getSavedPosts();
-
-        List<PostDTO> postDTOS = userSavedPosts.stream().map(p -> modelMapper.map(p, PostDTO.class)).toList();
-
-        return postDTOS;
-    }
 
     // Create Get Current Users Post
 

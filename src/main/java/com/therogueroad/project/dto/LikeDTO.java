@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 public class LikeDTO {
 
     private Long likeId;
+    private Long postId;
+    private Long commentId;
     private String userName;
     private String displayName;
 }

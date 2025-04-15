@@ -52,7 +52,10 @@ public class LikesServiceImpl implements LikesService{
 
         userLikes.add(like);
 
-        return modelMapper.map(like, LikeDTO.class);
+        LikeDTO likeDTO = modelMapper.map(like, LikeDTO.class);
+        likeDTO.setCommentId(postId);
+
+        return likeDTO;
     }
 
     @Override
@@ -74,6 +77,16 @@ public class LikesServiceImpl implements LikesService{
 
         userLikes.add(like);
 
-        return modelMapper.map(like, LikeDTO.class);
+        LikeDTO likeDTO = modelMapper.map(like, LikeDTO.class);
+        likeDTO.setCommentId(commentId);
+
+        return likeDTO;
+    }
+
+    @Override
+    public List<LikeDTO> getCurrentUserLikes(Userr user) {
+       List<Like> userLikes = user.getLikedPosts();
+       List<LikeDTO> userLikesDTO = userLikes.stream().map(l -> modelMapper.map(l, LikeDTO.class)).toList();
+       return userLikesDTO;
     }
 }
