@@ -81,6 +81,17 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
+    public void deleteOwnPost(Long postId, Userr user) {
+        Post deletedPost = postRepository.findById(postId).orElseThrow(()-> new RuntimeException("Post Not Found"));
+
+        if (deletedPost.getUser().equals(user)){
+        postRepository.delete(deletedPost);
+        } else {
+            throw new RuntimeException("User does not match");
+        }
+    }
+
+    @Override
     public PostDTO updatePost(PostDTO postDTO, Long postId) {
        Post post = postRepository.findById(postId).orElseThrow(()-> new RuntimeException("Post Not Found"));
 

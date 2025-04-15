@@ -26,4 +26,6 @@ public interface PostService {
     List<PostDTO> getPostsByCurrentUser(Userr user);
 
     List<PostDTO> getBookmarks(String username);
+
+    void deleteOwnPost(Long postId, Userr user);
 }

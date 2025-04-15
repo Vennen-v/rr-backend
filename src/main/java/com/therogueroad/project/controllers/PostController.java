@@ -1,5 +1,6 @@
 package com.therogueroad.project.controllers;
 
+import com.therogueroad.project.dto.CommentDTO;
 import com.therogueroad.project.dto.PostDTO;
 import com.therogueroad.project.models.Userr;
 import com.therogueroad.project.repositories.UserRepository;
@@ -35,9 +36,10 @@ public class PostController {
     }
 
     @GetMapping("/posts/{postId}")
-    public ResponseEntity<PostDTO> getPost(@PathVariable Long postId){
+    public ResponseEntity<PostDTO> getPostById(@PathVariable Long postId){
         return new ResponseEntity<>(postService.getPost(postId), HttpStatus.FOUND);
     }
+
 
     @GetMapping("/posts/user/{userId}")
     public ResponseEntity<List<PostDTO>> getPostsByUserId(@PathVariable Long userId){
@@ -52,6 +54,13 @@ public class PostController {
     @DeleteMapping("/posts/{postId}")
     public ResponseEntity<String> deletePost(@PathVariable Long postId){
         postService.deletePost(postId);
+        return new ResponseEntity<>("Post Successfully Deleted", HttpStatus.OK);
+    }
+
+    @DeleteMapping("/posts/user/current/{postId}")
+    public ResponseEntity<String> deleteOwnPost(@PathVariable Long postId, @AuthenticationPrincipal UserDetails userDetails){
+        Userr user = userRepository.findByUserName(userDetails.getUsername());
+        postService.deleteOwnPost(postId, user);
         return new ResponseEntity<>("Post Successfully Deleted", HttpStatus.OK);
     }
 
