@@ -1,6 +1,7 @@
 package com.therogueroad.project.services;
 
 import com.therogueroad.project.dto.PostDTO;
+import com.therogueroad.project.models.Post;
 import com.therogueroad.project.models.Userr;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public interface PostService {
 
     PostDTO getPost(Long postId);
 
-    PostDTO findByKeyword(String keyword);
+    List<PostDTO> findByKeyword(String keyword);
 
     PostDTO bookmarkPost(Long postId, String username);
 

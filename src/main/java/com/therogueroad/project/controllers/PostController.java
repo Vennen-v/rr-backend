@@ -2,6 +2,7 @@ package com.therogueroad.project.controllers;
 
 import com.therogueroad.project.dto.CommentDTO;
 import com.therogueroad.project.dto.PostDTO;
+import com.therogueroad.project.models.Post;
 import com.therogueroad.project.models.Userr;
 import com.therogueroad.project.repositories.UserRepository;
 import com.therogueroad.project.services.PostService;
@@ -47,7 +48,7 @@ public class PostController {
     }
 
     @GetMapping("/posts/search")
-    public ResponseEntity<PostDTO> getPostBySearch(@RequestParam(name = "keyword") String keyword){
+    public ResponseEntity<List<PostDTO>> getPostBySearch(@RequestParam(name = "keyword") String keyword){
         return new ResponseEntity<>(postService.findByKeyword(keyword), HttpStatus.FOUND);
     }
 
