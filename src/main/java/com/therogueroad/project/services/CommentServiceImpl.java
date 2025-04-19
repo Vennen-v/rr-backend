@@ -94,4 +94,21 @@ public class CommentServiceImpl implements CommentService{
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new RuntimeException("Comment Not Found"));
         return modelMapper.map(comment, CommentDTO.class);
     }
+
+    @Override
+    public void deleteOwnComment(Long commentId, Userr user) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new RuntimeException("Comment Not Found"));
+
+        if (comment.getUser().equals(user)){
+            commentRepository.delete(comment);
+        } else {
+            throw new RuntimeException("You cannot delete another user's comment.");
+        }
+    }
+
+    @Override
+    public void deleteComment(Long commentId) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new RuntimeException("Comment Not Found"));
+        commentRepository.delete(comment);
+    }
 }

@@ -41,7 +41,7 @@ public class Comment {
     @JoinColumn(name = "parent_id")
     private List<Comment> replies;
 
-    @OneToMany(mappedBy = "comment")
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
     private List<Like> likes = new ArrayList<>();
 
     @CreationTimestamp
