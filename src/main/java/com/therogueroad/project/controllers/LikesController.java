@@ -42,4 +42,11 @@ public class LikesController {
         Userr user = userRepository.findByUserName(userDetails.getUsername());
         return new ResponseEntity<>(likesService.getCurrentUserLikes(user), HttpStatus.FOUND);
     }
+
+    @DeleteMapping("/delete/like/{likeId}")
+    public ResponseEntity<String> removeOwnLike(@PathVariable Long likeId, @AuthenticationPrincipal UserDetails userDetails){
+        Userr user = userRepository.findByUserName(userDetails.getUsername());
+        likesService.removeLike(likeId, user);
+        return new ResponseEntity<>("Like Removed Successfully", HttpStatus.OK);
+    }
 }

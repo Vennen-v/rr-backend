@@ -89,4 +89,15 @@ public class LikesServiceImpl implements LikesService{
        List<LikeDTO> userLikesDTO = userLikes.stream().map(l -> modelMapper.map(l, LikeDTO.class)).toList();
        return userLikesDTO;
     }
+
+    @Override
+    public void removeLike(Long likeId, Userr user) {
+        Like like = likeRepository.findById(likeId).orElseThrow(() -> new RuntimeException("Like Does Not Exists"));
+
+        if (like.getUser().equals(user)){
+            likeRepository.delete(like);
+        } else {
+            throw new RuntimeException("You cannot delete another user's like.");
+        }
+    }
 }
