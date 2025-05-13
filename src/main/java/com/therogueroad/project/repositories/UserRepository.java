@@ -1,17 +1,18 @@
 package com.therogueroad.project.repositories;
 
-import com.therogueroad.project.models.Post;
-import com.therogueroad.project.models.Userr;
+import com.therogueroad.project.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<Userr, Long> {
-    Userr findByUserName(String username);
+public interface UserRepository extends JpaRepository<User, Long> {
+    Optional<User> findByUserName(String username);
 
-    boolean existsByUserName(String username);
+    Boolean existsByEmail(String email);
+
+    Boolean existsByUserName(String username);
 
 
 }

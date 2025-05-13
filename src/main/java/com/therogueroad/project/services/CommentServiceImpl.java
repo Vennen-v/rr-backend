@@ -3,7 +3,7 @@ package com.therogueroad.project.services;
 import com.therogueroad.project.dto.CommentDTO;
 import com.therogueroad.project.models.Comment;
 import com.therogueroad.project.models.Post;
-import com.therogueroad.project.models.Userr;
+import com.therogueroad.project.models.User;
 import com.therogueroad.project.repositories.CommentRepository;
 import com.therogueroad.project.repositories.PostRepository;
 import com.therogueroad.project.repositories.UserRepository;
@@ -37,7 +37,7 @@ public class CommentServiceImpl implements CommentService{
 //        user.setDisplayName("Yoshi Vennen");
 //        userRepository.save(user);
 
-        Userr user = userRepository.findByUserName(username);
+        User user = userRepository.findByUserName(username).orElseThrow(() -> new RuntimeException("User Not Found"));
 
 
         Comment comment = modelMapper.map(commentDTO, Comment.class);
@@ -63,7 +63,8 @@ public class CommentServiceImpl implements CommentService{
 //        user.setDisplayName("Yoshi Vennen");
 //        userRepository.save(user);
 
-        Userr user = userRepository.findByUserName(username);
+        User user = userRepository.findByUserName(username).orElseThrow(() -> new RuntimeException("User Not Found with username: " + username));
+
 
 
         Comment reply = modelMapper.map(commentDTO, Comment.class);
@@ -96,7 +97,7 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public void deleteOwnComment(Long commentId, Userr user) {
+    public void deleteOwnComment(Long commentId, User user) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new RuntimeException("Comment Not Found"));
 
         if (comment.getUser().equals(user)){

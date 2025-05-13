@@ -1,7 +1,7 @@
 package com.therogueroad.project.services;
 
 import com.therogueroad.project.dto.UserDTO;
-import com.therogueroad.project.models.Userr;
+import com.therogueroad.project.models.User;
 import com.therogueroad.project.repositories.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,23 +19,23 @@ public class UserServiceImpl implements UserService{
     ModelMapper modelMapper;
 
     @Override
-    public List<UserDTO> getFollowing(Userr user) {
-        List<Userr> userFollowing = user.getFollowing();
+    public List<UserDTO> getFollowing(User user) {
+        List<User> userFollowing = user.getFollowing();
 
         return userFollowing.stream().map(uf -> modelMapper.map(uf, UserDTO.class)).toList();
     }
 
 
     @Override
-    public List<UserDTO> getFollowers(Userr user) {
-        List<Userr> userFollowers = user.getFollowers();
+    public List<UserDTO> getFollowers(User user) {
+        List<User> userFollowers = user.getFollowers();
 
         return userFollowers.stream().map(uf -> modelMapper.map(uf, UserDTO.class)).toList();
     }
 
     @Override
-    public void followUser(Long userId, Userr user) {
-        Userr toFollow = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User Not Found"));
+    public void followUser(Long userId, User user) {
+        User toFollow = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User Not Found"));
 
         if(!toFollow.equals(user)) {
             user.getFollowing().add(toFollow);
@@ -50,8 +50,8 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void unfollowUser(Long userId, Userr user) {
-        Userr toUnfollow = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User Not Found"));
+    public void unfollowUser(Long userId, User user) {
+        User toUnfollow = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User Not Found"));
 
 
         user.getFollowing().remove(toUnfollow);

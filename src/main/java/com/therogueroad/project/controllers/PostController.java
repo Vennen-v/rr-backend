@@ -1,16 +1,15 @@
 package com.therogueroad.project.controllers;
 
-import com.therogueroad.project.dto.CommentDTO;
 import com.therogueroad.project.dto.PostDTO;
-import com.therogueroad.project.models.Post;
-import com.therogueroad.project.models.Userr;
+import com.therogueroad.project.models.User;
 import com.therogueroad.project.repositories.UserRepository;
+import com.therogueroad.project.security.services.UserDetailsImpl;
 import com.therogueroad.project.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,7 +25,7 @@ public class PostController {
     private UserRepository userRepository;
 
     @PostMapping("/posts")
-    public ResponseEntity<PostDTO> createPost(@RequestBody PostDTO postDTO, @AuthenticationPrincipal UserDetails userDetails){
+    public ResponseEntity<PostDTO> createPost(@RequestBody PostDTO postDTO, @AuthenticationPrincipal UserDetailsImpl userDetails){
         String username = userDetails.getUsername();
         return new ResponseEntity<>(postService.createPost(postDTO, username), HttpStatus.CREATED);
     }
@@ -59,8 +58,8 @@ public class PostController {
     }
 
     @DeleteMapping("/posts/user/current/{postId}")
-    public ResponseEntity<String> deleteOwnPost(@PathVariable Long postId, @AuthenticationPrincipal UserDetails userDetails){
-        Userr user = userRepository.findByUserName(userDetails.getUsername());
+    public ResponseEntity<String> deleteOwnPost(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        User user = userRepository.findByUserName(userDetails.getUsername()).orElseThrow(() -> new RuntimeException("User Not Found"));
         postService.deleteOwnPost(postId, user);
         return new ResponseEntity<>("Post Successfully Deleted", HttpStatus.OK);
     }
@@ -71,20 +70,20 @@ public class PostController {
     }
 
     @PutMapping("/posts/save/{postId}")
-    public ResponseEntity<PostDTO> savePost(@PathVariable Long postId, @AuthenticationPrincipal UserDetails userDetails){
+    public ResponseEntity<PostDTO> savePost(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails){
         String username = userDetails.getUsername();
         return new ResponseEntity<>(postService.bookmarkPost(postId, username), HttpStatus.OK);
     }
 
     //Create Get Currents User's Post
     @GetMapping("/posts/user/current")
-    public ResponseEntity<List<PostDTO>> getPostsByCurrentUser(@AuthenticationPrincipal UserDetails userDetails){
-        Userr user = userRepository.findByUserName(userDetails.getUsername());
+    public ResponseEntity<List<PostDTO>> getPostsByCurrentUser(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        User user = userRepository.findByUserName(userDetails.getUsername()).orElseThrow(() -> new RuntimeException("User Not Found"));
         return new ResponseEntity<>(postService.getPostsByCurrentUser(user), HttpStatus.FOUND);
     }
 
     @GetMapping("/user/bookmarks")
-    public ResponseEntity<List<PostDTO>> getUserSavedPosts(@AuthenticationPrincipal UserDetails userDetails){
+    public ResponseEntity<List<PostDTO>> getUserSavedPosts(@AuthenticationPrincipal UserDetailsImpl userDetails){
         String username = userDetails.getUsername();
         return new ResponseEntity<>(postService.getBookmarks(username), HttpStatus.FOUND);
     }

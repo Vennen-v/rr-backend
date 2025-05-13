@@ -3,7 +3,7 @@ package com.therogueroad.project.services;
 import com.therogueroad.project.dto.PostDTO;
 import com.therogueroad.project.models.Like;
 import com.therogueroad.project.models.Post;
-import com.therogueroad.project.models.Userr;
+import com.therogueroad.project.models.User;
 import com.therogueroad.project.repositories.PostRepository;
 import com.therogueroad.project.repositories.UserRepository;
 import org.modelmapper.ModelMapper;
@@ -34,7 +34,7 @@ public class PostServiceImpl implements PostService{
 //        user.setDisplayName("Yoshi Vennen");
 //        userRepository.save(user);
 
-        Userr user = userRepository.findByUserName(username);
+        User user = userRepository.findByUserName(username).orElseThrow(() -> new RuntimeException("User Not Found"));
 
 
         List<Post> userPost = user.getUserPosts();
@@ -65,7 +65,7 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public List<PostDTO> getPostsByUserId(Long userId) {
-         Userr user = userRepository.findById(userId).orElseThrow(()-> new RuntimeException("User Not Found"));
+         User user = userRepository.findById(userId).orElseThrow(()-> new RuntimeException("User Not Found"));
 
          List<Post> posts = user.getUserPosts();
 
@@ -81,7 +81,7 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public void deleteOwnPost(Long postId, Userr user) {
+    public void deleteOwnPost(Long postId, User user) {
         Post deletedPost = postRepository.findById(postId).orElseThrow(()-> new RuntimeException("Post Not Found"));
 
         if (deletedPost.getUser().equals(user)){
@@ -125,7 +125,7 @@ public class PostServiceImpl implements PostService{
     public PostDTO bookmarkPost(Long postId, String username) {
         Post post = postRepository.findById(postId).orElseThrow(()-> new RuntimeException("Post Not Found"));
 
-        Userr user = userRepository.findByUserName(username);
+        User user = userRepository.findByUserName(username).orElseThrow(() -> new RuntimeException("User Not Found"));
 
         System.out.println(username);
 
@@ -149,7 +149,7 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public List<PostDTO> getBookmarks(String username) {
-        Userr user = userRepository.findByUserName(username);
+        User user = userRepository.findByUserName(username).orElseThrow(() -> new RuntimeException("User Not Found"));
 
         List<Post> userSavedPosts = user.getSavedPosts();
 
@@ -159,7 +159,7 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public List<PostDTO> getPostsByCurrentUser(Userr user) {
+    public List<PostDTO> getPostsByCurrentUser(User user) {
         List<Post> posts = user.getUserPosts();
 
         List<PostDTO> postDTOS = posts.stream().map(p -> modelMapper.map(p, PostDTO.class)).toList();

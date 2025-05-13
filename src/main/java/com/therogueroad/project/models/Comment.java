@@ -25,7 +25,7 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private Userr user;
+    private User user;
 
     private String userName;
 

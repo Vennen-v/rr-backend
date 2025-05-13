@@ -4,20 +4,23 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "userss", uniqueConstraints = {
+@Table(name = "users", uniqueConstraints = {
         @UniqueConstraint(columnNames = "username"),
         @UniqueConstraint(columnNames = "email")
 })
-public class Userr {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,19 +57,27 @@ public class Userr {
 
     @OneToMany
     @JoinColumn(name = "following_id")
-    private List<Userr> following = new ArrayList<>();
+    private List<User> following = new ArrayList<>();
 
     @OneToMany
     @JoinColumn(name = "follower_id")
-    private List<Userr> followers = new ArrayList<>();
+    private List<User> followers = new ArrayList<>();
 
-    public Userr(String userName, String email, String password) {
+    @Getter
+    @Setter
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    @JoinTable(name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles;
+
+    public User(String userName, String email, String password) {
         this.userName = userName;
         this.email = email;
         this.password = password;
     }
 
-    public Userr(Long userId, String displayName, String userName, String email, String password, String profilePic, List<Post> savedPosts, List<Like> likedPosts, List<Userr> following, List<Userr> followers) {
+    public User(Long userId, String displayName, String userName, String email, String password, String profilePic, List<Post> savedPosts, List<Like> likedPosts, List<User> following, List<User> followers) {
         this.userId = userId;
         this.displayName = displayName;
         this.userName = userName;

@@ -1,8 +1,7 @@
 package com.therogueroad.project.services;
 
 import com.therogueroad.project.dto.PostDTO;
-import com.therogueroad.project.models.Post;
-import com.therogueroad.project.models.Userr;
+import com.therogueroad.project.models.User;
 
 import java.util.List;
 
@@ -24,9 +23,9 @@ public interface PostService {
 
     PostDTO bookmarkPost(Long postId, String username);
 
-    List<PostDTO> getPostsByCurrentUser(Userr user);
+    List<PostDTO> getPostsByCurrentUser(User user);
 
     List<PostDTO> getBookmarks(String username);
 
-    void deleteOwnPost(Long postId, Userr user);
+    void deleteOwnPost(Long postId, User user);
 }

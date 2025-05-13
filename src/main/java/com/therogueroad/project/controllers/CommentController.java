@@ -1,8 +1,9 @@
 package com.therogueroad.project.controllers;
 
 import com.therogueroad.project.dto.CommentDTO;
-import com.therogueroad.project.models.Userr;
+import com.therogueroad.project.models.User;
 import com.therogueroad.project.repositories.UserRepository;
+import com.therogueroad.project.security.services.UserDetailsImpl;
 import com.therogueroad.project.services.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,13 +25,13 @@ public class CommentController {
     private UserRepository userRepository;
 
     @PostMapping("/comments/posts/{postId}")
-    public ResponseEntity<CommentDTO> createComment(@PathVariable Long postId, @RequestBody CommentDTO commentDTO, @AuthenticationPrincipal UserDetails userDetails){
+    public ResponseEntity<CommentDTO> createComment(@PathVariable Long postId, @RequestBody CommentDTO commentDTO, @AuthenticationPrincipal UserDetailsImpl userDetails){
         String username = userDetails.getUsername();
         return new ResponseEntity<>(commentService.createComment(postId, commentDTO, username), HttpStatus.CREATED);
     }
 
     @PostMapping("/comments/reply/{commentId}")
-    public ResponseEntity<CommentDTO> createCommentReply(@PathVariable Long commentId, @RequestBody CommentDTO commentDTO, @AuthenticationPrincipal UserDetails userDetails){
+    public ResponseEntity<CommentDTO> createCommentReply(@PathVariable Long commentId, @RequestBody CommentDTO commentDTO, @AuthenticationPrincipal UserDetailsImpl userDetails){
         String username = userDetails.getUsername();
         return new ResponseEntity<>(commentService.createCommentReply(commentId, commentDTO, username), HttpStatus.CREATED);
     }
@@ -46,8 +47,8 @@ public class CommentController {
     }
 
     @DeleteMapping("/comments/delete/user/{commentId}")
-    public ResponseEntity<String> deleteOwnComment(@PathVariable Long commentId, @AuthenticationPrincipal UserDetails userDetails){
-        Userr user = userRepository.findByUserName(userDetails.getUsername());
+    public ResponseEntity<String> deleteOwnComment(@PathVariable Long commentId, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        User user = userRepository.findByUserName(userDetails.getUsername()).orElseThrow(() -> new RuntimeException("User Not Found"));
         commentService.deleteOwnComment(commentId, user);
         return new ResponseEntity<>("Comment Successfully Deleted", HttpStatus.OK);
     }

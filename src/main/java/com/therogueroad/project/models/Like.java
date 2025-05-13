@@ -1,6 +1,5 @@
 package com.therogueroad.project.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,7 +19,7 @@ public class Like {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private Userr user;
+    private User user;
 
     private String userName;
 

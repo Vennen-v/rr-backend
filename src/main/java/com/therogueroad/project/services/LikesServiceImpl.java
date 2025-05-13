@@ -4,7 +4,7 @@ import com.therogueroad.project.dto.LikeDTO;
 import com.therogueroad.project.models.Comment;
 import com.therogueroad.project.models.Like;
 import com.therogueroad.project.models.Post;
-import com.therogueroad.project.models.Userr;
+import com.therogueroad.project.models.User;
 import com.therogueroad.project.repositories.CommentRepository;
 import com.therogueroad.project.repositories.LikeRepository;
 import com.therogueroad.project.repositories.PostRepository;
@@ -37,7 +37,7 @@ public class LikesServiceImpl implements LikesService{
     public LikeDTO likePost(Long postId, String username) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("Post Not Found"));
 
-        Userr user = userRepository.findByUserName(username);
+        User user = userRepository.findByUserName(username).orElseThrow(() -> new RuntimeException("User Not Found"));
 
         List<Like> userLikes = user.getLikedPosts();
 
@@ -62,7 +62,7 @@ public class LikesServiceImpl implements LikesService{
     public LikeDTO likeComment(Long commentId, String username) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new RuntimeException("Post Not Found"));
 
-        Userr user = userRepository.findByUserName(username);
+        User user = userRepository.findByUserName(username).orElseThrow(() -> new RuntimeException("User Not Found"));
 
         List<Like> userLikes = user.getLikedPosts();
 
@@ -84,14 +84,14 @@ public class LikesServiceImpl implements LikesService{
     }
 
     @Override
-    public List<LikeDTO> getCurrentUserLikes(Userr user) {
+    public List<LikeDTO> getCurrentUserLikes(User user) {
        List<Like> userLikes = user.getLikedPosts();
        List<LikeDTO> userLikesDTO = userLikes.stream().map(l -> modelMapper.map(l, LikeDTO.class)).toList();
        return userLikesDTO;
     }
 
     @Override
-    public void removeLike(Long likeId, Userr user) {
+    public void removeLike(Long likeId, User user) {
         Like like = likeRepository.findById(likeId).orElseThrow(() -> new RuntimeException("Like Does Not Exists"));
 
         if (like.getUser().equals(user)){
