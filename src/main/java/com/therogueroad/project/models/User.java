@@ -41,7 +41,7 @@ public class User {
     private String password;
 
     @Column(name = "profile_pic")
-    private String profilePic = "default.png";
+    private String profilePic = "https://img.freepik.com/premium-photo/icon-define-person-allocate-stylize-250_1137696-4300.jpg?semt=ais_hybrid&w=740";
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @Column(name = "user_posts")
@@ -71,8 +71,9 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 
-    public User(String userName, String email, String password) {
+    public User(String userName, String displayName, String email, String password) {
         this.userName = userName;
+        this.displayName = displayName;
         this.email = email;
         this.password = password;
     }

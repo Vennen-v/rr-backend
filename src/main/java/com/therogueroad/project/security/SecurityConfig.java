@@ -123,14 +123,12 @@ public class SecurityConfig {
             Set<Role> adminRoles = Set.of(userRole, adminRole);
 
             if (!userRepository.existsByUserName("yoshi35")) {
-                User user = new User("yoshi35", "yoshi@gmail.com", passwordEncoder().encode("meepmoop"));
-                user.setDisplayName("Yoshi Vennen");
+                User user = new User("yoshi35","Yoshi Vennen", "yoshi@gmail.com", passwordEncoder().encode("meepmoop"));
                 userRepository.save(user);
             }
 
             if (!userRepository.existsByUserName("sward140")) {
-                User user2 = new User("sward140", "sward@gmail.com", passwordEncoder().encode("meepmoop"));
-                user2.setDisplayName("Emma Sward");
+                User user2 = new User("sward140", "Emma S", "sward@gmail.com", passwordEncoder().encode("meepmoop"));
                 userRepository.save(user2);
             }
 
