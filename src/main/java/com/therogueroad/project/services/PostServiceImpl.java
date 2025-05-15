@@ -1,6 +1,7 @@
 package com.therogueroad.project.services;
 
 import com.therogueroad.project.dto.PostDTO;
+import com.therogueroad.project.dto.PostResponse;
 import com.therogueroad.project.models.Like;
 import com.therogueroad.project.models.Post;
 import com.therogueroad.project.models.User;
@@ -8,6 +9,10 @@ import com.therogueroad.project.repositories.PostRepository;
 import com.therogueroad.project.repositories.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -55,23 +60,68 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public List<PostDTO> getAllPost() {
-        List<Post> posts = postRepository.findAll();
+//    public List<PostDTO> getAllPost() {
+//        List<Post> posts = postRepository.findAll();
+//
+//        List<PostDTO> postDTOS = posts.stream().map(p -> modelMapper.map(p, PostDTO.class)).toList();
+//
+//        return postDTOS;
+//    }
 
-        List<PostDTO> postDTOS = posts.stream().map(p -> modelMapper.map(p, PostDTO.class)).toList();
+    public PostResponse getAllPost(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
+        Sort sortByAndOrder = sortOrder.equalsIgnoreCase("asc")
+                ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
 
-        return postDTOS;
+        Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortByAndOrder);
+        Page<Post> postPage = postRepository.findAll(pageDetails);
+
+        List<Post> posts = postPage.getContent();
+
+
+        List<PostDTO> postDTOS = posts.stream()
+                .map(post -> modelMapper.map(post, PostDTO.class))
+                .toList();
+
+        PostResponse postResponse = new PostResponse();
+        postResponse.setContent(postDTOS);
+        postResponse.setPageNumber(postPage.getNumber());
+        postResponse.setPageSize(postPage.getSize());
+        postResponse.setTotalElements(postPage.getTotalElements());
+        postResponse.setTotalPages(postPage.getTotalPages());
+        postResponse.setLastPage(postPage.isLast());
+
+        return postResponse;
     }
 
     @Override
-    public List<PostDTO> getPostsByUserId(Long userId) {
+    public PostResponse getPostsByUserId(Long userId, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
          User user = userRepository.findById(userId).orElseThrow(()-> new RuntimeException("User Not Found"));
 
-         List<Post> posts = user.getUserPosts();
 
-        List<PostDTO> postDTOS = posts.stream().map(p -> modelMapper.map(p, PostDTO.class)).toList();
+        Sort sortByAndOrder = sortOrder.equalsIgnoreCase("asc")
+                ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
 
-        return postDTOS;
+        Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortByAndOrder);
+        Page<Post> postPage = postRepository.findByUser(user, pageDetails);
+
+        List<Post> posts = postPage.getContent();
+
+
+        List<PostDTO> postDTOS = posts.stream()
+                .map(post -> modelMapper.map(post, PostDTO.class))
+                .toList();
+
+       PostResponse postResponse = new PostResponse();
+        postResponse.setContent(postDTOS);
+        postResponse.setPageNumber(postPage.getNumber());
+        postResponse.setPageSize(postPage.getSize());
+        postResponse.setTotalElements(postPage.getTotalElements());
+        postResponse.setTotalPages(postPage.getTotalPages());
+        postResponse.setLastPage(postPage.isLast());
+
+        return postResponse;
     }
 
     @Override
@@ -115,10 +165,28 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public List<PostDTO> findByKeyword(String keyword) {
-        List<Post> foundPosts = postRepository.findByTitleContainingIgnoreCase(keyword);
-        List<PostDTO> postDTOS = foundPosts.stream().map(p -> modelMapper.map(p, PostDTO.class)).toList();
-        return postDTOS;
+    public PostResponse findByKeyword(String keyword, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
+        Sort sortByAndOrder = sortOrder.equalsIgnoreCase("asc")
+                ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+
+        Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortByAndOrder);
+        Page<Post> postPage = postRepository.findByTitleContainingIgnoreCase(keyword , pageDetails);
+
+        List<Post> posts = postPage.getContent();
+        List<PostDTO> postDTOS = posts.stream()
+                .map(post -> modelMapper.map(post, PostDTO.class))
+                .toList();
+
+
+        PostResponse postResponse = new PostResponse();
+        postResponse.setContent(postDTOS);
+        postResponse.setPageNumber(postPage.getNumber());
+        postResponse.setPageSize(postPage.getSize());
+        postResponse.setTotalElements(postPage.getTotalElements());
+        postResponse.setTotalPages(postPage.getTotalPages());
+        postResponse.setLastPage(postPage.isLast());
+        return postResponse;
     }
 
     @Override

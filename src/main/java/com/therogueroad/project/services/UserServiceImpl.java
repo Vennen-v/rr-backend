@@ -1,10 +1,16 @@
 package com.therogueroad.project.services;
 
 import com.therogueroad.project.dto.UserDTO;
+import com.therogueroad.project.dto.UserDTOO;
+import com.therogueroad.project.dto.UserResponse;
 import com.therogueroad.project.models.User;
 import com.therogueroad.project.repositories.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,6 +37,14 @@ public class UserServiceImpl implements UserService{
         List<User> userFollowers = user.getFollowers();
 
         return userFollowers.stream().map(uf -> modelMapper.map(uf, UserDTO.class)).toList();
+    }
+
+
+    @Override
+    public List<UserDTOO> getFollowingPosts(User user) {
+        List<User> userFollowing = user.getFollowing();
+
+        return userFollowing.stream().map(uf -> modelMapper.map(uf, UserDTOO.class)).toList();
     }
 
     @Override
@@ -63,5 +77,53 @@ public class UserServiceImpl implements UserService{
 
 
     }
+
+    @Override
+    public List<UserDTO> getAllUsers() {
+        List<User> users = userRepository.findAll();
+
+        List<UserDTO> userDTOS = users.stream().map(p -> modelMapper.map(p, UserDTO.class)).toList();
+
+        return userDTOS;
+    }
+
+    @Override
+    public UserResponse findByKeyword(String keyword, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
+//        List<User> foundUsers = userRepository.findByUserNameContainingIgnoreCase(keyword);
+
+//        List<User> foundUsers = userRepository.findByUserNameOrDisplayNameContainingIgnoreCase(keyword, keyword);
+//        List<UserDTO> userDTOS = foundUsers.stream().map(u -> modelMapper.map(u, UserDTO.class)).toList();
+//
+//        List<User> foundUsersDisplay = userRepository.findByDisplayNameContainingIgnoreCase(keyword);
+//        List<UserDTO> userDisplayDTOS = foundUsersDisplay.stream().map(p -> modelMapper.map(p, UserDTO.class)).toList();
+//
+//        List<UserDTO>allSearchUsers = new ArrayList<>();
+//        allSearchUsers.addAll(userDTOS);
+//        allSearchUsers.addAll(userDisplayDTOS);
+
+        Sort sortByAndOrder = sortOrder.equalsIgnoreCase("asc")
+                ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+
+        Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortByAndOrder);
+        Page<User> userPage = userRepository.findByUserNameOrDisplayNameContainingIgnoreCase(keyword, keyword, pageDetails);
+
+        List<User> users = userPage.getContent();
+        List<UserDTO> userDTOS = users.stream()
+                .map(u -> modelMapper.map(u, UserDTO.class))
+                .toList();
+
+        UserResponse userResponse = new UserResponse();
+        userResponse.setContent(userDTOS);
+        userResponse.setPageNumber(userPage.getNumber());
+        userResponse.setPageSize(userPage.getSize());
+        userResponse.setTotalElements(userPage.getTotalElements());
+        userResponse.setTotalPages(userPage.getTotalPages());
+        userResponse.setLastPage(userPage.isLast());
+
+return userResponse;
+    }
+
+
 
 }

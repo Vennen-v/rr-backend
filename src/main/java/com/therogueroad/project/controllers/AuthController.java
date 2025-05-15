@@ -115,6 +115,12 @@ public class AuthController {
 
     }
 
+    @PostMapping("/auth/signout")
+    public ResponseEntity<?> signOutUser() {
+        ResponseCookie cookie = jwtUtils.getCleanJwtCookie();
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).body(new MessageResponse("You have been signed out"));
+    }
+
     @GetMapping("/user")
     public ResponseEntity<UserDTO> getUserDetails(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         User user = userRepository.findByUserName(userDetails.getUsername()).orElseThrow(() -> new RuntimeException("User Not Found"));

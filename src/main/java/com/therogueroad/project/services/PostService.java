@@ -1,6 +1,7 @@
 package com.therogueroad.project.services;
 
 import com.therogueroad.project.dto.PostDTO;
+import com.therogueroad.project.dto.PostResponse;
 import com.therogueroad.project.models.User;
 
 import java.util.List;
@@ -9,9 +10,9 @@ public interface PostService {
 
     PostDTO createPost(PostDTO postDTO, String username);
 
-    List<PostDTO> getAllPost();
+    PostResponse getAllPost(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
 
-    List<PostDTO> getPostsByUserId(Long userId);
+    PostResponse getPostsByUserId(Long userId, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
 
     void deletePost(Long postId);
 
@@ -19,7 +20,7 @@ public interface PostService {
 
     PostDTO getPost(Long postId);
 
-    List<PostDTO> findByKeyword(String keyword);
+    PostResponse findByKeyword(String keyword, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
 
     PostDTO bookmarkPost(Long postId, String username);
 

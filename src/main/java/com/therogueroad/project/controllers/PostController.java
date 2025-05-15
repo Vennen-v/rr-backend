@@ -1,6 +1,7 @@
 package com.therogueroad.project.controllers;
 
 import com.therogueroad.project.dto.PostDTO;
+import com.therogueroad.project.dto.PostResponse;
 import com.therogueroad.project.models.User;
 import com.therogueroad.project.repositories.UserRepository;
 import com.therogueroad.project.security.services.UserDetailsImpl;
@@ -30,9 +31,19 @@ public class PostController {
         return new ResponseEntity<>(postService.createPost(postDTO, username), HttpStatus.CREATED);
     }
 
+//    @GetMapping("/posts")
+//    public ResponseEntity<List<PostDTO>> getAllPost(){
+//        return new ResponseEntity<>(postService.getAllPost(), HttpStatus.FOUND);
+//    }
+
     @GetMapping("/posts")
-    public ResponseEntity<List<PostDTO>> getAllPost(){
-        return new ResponseEntity<>(postService.getAllPost(), HttpStatus.FOUND);
+    public ResponseEntity<PostResponse> getAllPost(
+            @RequestParam(name = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
+            @RequestParam(name = "pageSize", defaultValue = "12", required = false) Integer pageSize,
+            @RequestParam(name = "sortBy", defaultValue = "postId", required = false) String sortBy,
+            @RequestParam(name = "sortOrder", defaultValue = "asc", required = false) String sortOrder
+    ){
+        return new ResponseEntity<>(postService.getAllPost(pageNumber, pageSize, sortBy, sortOrder), HttpStatus.FOUND);
     }
 
     @GetMapping("/posts/{postId}")
@@ -42,13 +53,22 @@ public class PostController {
 
 
     @GetMapping("/posts/user/{userId}")
-    public ResponseEntity<List<PostDTO>> getPostsByUserId(@PathVariable Long userId){
-        return new ResponseEntity<>(postService.getPostsByUserId(userId), HttpStatus.FOUND);
+    public ResponseEntity<PostResponse> getPostsByUserId(@PathVariable Long userId,
+                                                          @RequestParam(name = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
+                                                          @RequestParam(name = "pageSize", defaultValue = "12", required = false) Integer pageSize,
+                                                          @RequestParam(name = "sortBy", defaultValue = "postId", required = false) String sortBy,
+                                                          @RequestParam(name = "sortOrder", defaultValue = "desc", required = false) String sortOrder
+                                                          ){
+        return new ResponseEntity<>(postService.getPostsByUserId(userId, pageNumber, pageSize, sortBy, sortOrder), HttpStatus.FOUND);
     }
 
     @GetMapping("/posts/search")
-    public ResponseEntity<List<PostDTO>> getPostBySearch(@RequestParam(name = "keyword") String keyword){
-        return new ResponseEntity<>(postService.findByKeyword(keyword), HttpStatus.FOUND);
+    public ResponseEntity<PostResponse> getPostBySearch(@RequestParam(name = "keyword") String keyword,
+                                                        @RequestParam(name = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
+                                                        @RequestParam(name = "pageSize", defaultValue = "12", required = false) Integer pageSize,
+                                                        @RequestParam(name = "sortBy", defaultValue = "postId", required = false) String sortBy,
+                                                        @RequestParam(name = "sortOrder", defaultValue = "desc", required = false) String sortOrder){
+        return new ResponseEntity<>(postService.findByKeyword(keyword, pageNumber, pageSize, sortBy, sortOrder), HttpStatus.FOUND);
     }
 
     @DeleteMapping("/posts/{postId}")
