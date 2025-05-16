@@ -3,6 +3,8 @@ package com.therogueroad.project.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,18 +29,29 @@ public class User {
     @Column(name = "user_id")
     private Long userId;
 
+    @NotBlank
+    @Size(max = 20)
     private String displayName;
 
+    @NotBlank
     @Column(name = "username")
+    @Size(max = 20)
     private String userName;
 
+    @NotBlank
+    @Size(max = 50)
     @Email
     @Column(name = "email")
     private String email;
 
+    @Size(min = 6, max = 120)
     @Column(name = "password")
     @JsonIgnore
     private String password;
+
+    @Size(max = 250)
+    @Column(name = "bio")
+    private String bio;
 
     @Column(name = "profile_pic")
     private String profilePic = "https://img.freepik.com/premium-photo/icon-define-person-allocate-stylize-250_1137696-4300.jpg?semt=ais_hybrid&w=740";

@@ -18,6 +18,8 @@ public class UserDTOO {
     private String userName;
     private String displayName;
     private String email;
-    private List<PostNoUserDTO> userPosts;
+    private String bio;
     private String profilePic;
+    private List<PostNoUserDTO> userPosts;
+
 }

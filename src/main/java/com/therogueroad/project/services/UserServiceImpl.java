@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -23,6 +24,9 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     ModelMapper modelMapper;
+
+    @Autowired
+    private FileService fileService;
 
     @Override
     public List<UserDTO> getFollowing(User user) {
@@ -52,6 +56,30 @@ public class UserServiceImpl implements UserService{
         User user = userRepository.findByUserName(username).orElseThrow(() -> new RuntimeException("User Not Found"));
 
         return modelMapper.map(user, UserDTOO.class);
+    }
+
+    @Override
+    public void updateUserInfo(UserDTO userDTO, User user) {
+
+
+        user.setDisplayName(userDTO.getDisplayName());
+        user.setUserName(userDTO.getUserName());
+        user.setEmail(userDTO.getEmail());
+        user.setBio(userDTO.getBio());
+
+        userRepository.save(user);
+
+      modelMapper.map(user, UserDTO.class);
+
+    }
+
+    @Override
+    public void updateProfilePic(MultipartFile file, User user) {
+
+        String fileUrl = fileService.saveFileToAWSS3Bucket(file);
+        user.setProfilePic(fileUrl);
+
+        userRepository.save(user);
     }
 
     @Override

@@ -2,7 +2,6 @@ package com.therogueroad.project.controllers;
 
 import com.therogueroad.project.dto.PostDTO;
 import com.therogueroad.project.dto.PostResponse;
-import com.therogueroad.project.dto.PostTitleAndContentRequest;
 import com.therogueroad.project.models.User;
 import com.therogueroad.project.repositories.UserRepository;
 import com.therogueroad.project.security.services.UserDetailsImpl;
@@ -13,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -27,9 +27,9 @@ public class PostController {
     private UserRepository userRepository;
 
     @PostMapping("/posts")
-    public ResponseEntity<PostDTO> createPost(@RequestBody PostTitleAndContentRequest postTitleAndContentRequest, PostDTO postDTO, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public ResponseEntity<PostDTO> createPost(@RequestPart("title") String title, @RequestPart("content") String content,  @RequestPart("file") MultipartFile file, PostDTO postDTO, @AuthenticationPrincipal UserDetailsImpl userDetails){
         String username = userDetails.getUsername();
-        return new ResponseEntity<>(postService.createPost(postTitleAndContentRequest, postDTO, username), HttpStatus.CREATED);
+        return new ResponseEntity<>(postService.createPost(title, content, file, postDTO, username), HttpStatus.CREATED);
     }
 
 //    @GetMapping("/posts")
@@ -86,8 +86,8 @@ public class PostController {
     }
 
     @PutMapping("/posts/{postId}")
-    public ResponseEntity<PostDTO> updatePost(@RequestBody PostDTO postDTO, @PathVariable Long postId){
-        return new ResponseEntity<>(postService.updatePost(postDTO, postId), HttpStatus.OK);
+    public ResponseEntity<PostDTO> updatePost(@RequestPart(value = "title", required = false) String title, @RequestPart(value = "content", required = false) String content,  @RequestPart(value = "file", required = false) MultipartFile file, PostDTO postDTO, @PathVariable Long postId){
+        return new ResponseEntity<>(postService.updatePost(title, content, file, postDTO, postId), HttpStatus.OK);
     }
 
     @PutMapping("/posts/save/{postId}")

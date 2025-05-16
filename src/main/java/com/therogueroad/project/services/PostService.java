@@ -2,14 +2,14 @@ package com.therogueroad.project.services;
 
 import com.therogueroad.project.dto.PostDTO;
 import com.therogueroad.project.dto.PostResponse;
-import com.therogueroad.project.dto.PostTitleAndContentRequest;
 import com.therogueroad.project.models.User;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 public interface PostService {
 
-    PostDTO createPost(PostTitleAndContentRequest postTitleAndContentRequest, PostDTO postDTO, String username);
+    PostDTO createPost(String title, String content, MultipartFile file, PostDTO postDTO, String username);
 
     PostResponse getAllPost(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
 
@@ -17,7 +17,7 @@ public interface PostService {
 
     void deletePost(Long postId);
 
-    PostDTO updatePost(PostDTO postDTO, Long postId);
+    PostDTO updatePost(String title, String content, MultipartFile file, PostDTO postDTO, Long postId);
 
     PostDTO getPost(Long postId);
 

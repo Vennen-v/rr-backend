@@ -1,6 +1,7 @@
 package com.therogueroad.project.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,7 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long postId;
 
+    @NotBlank
     private String title;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -35,6 +37,7 @@ public class Post {
     private String postImg;
 
     @Lob
+    @NotBlank
     private String content;
 
     @OneToMany(mappedBy = "post")

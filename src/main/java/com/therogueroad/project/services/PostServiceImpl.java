@@ -1,8 +1,8 @@
 package com.therogueroad.project.services;
 
+
 import com.therogueroad.project.dto.PostDTO;
 import com.therogueroad.project.dto.PostResponse;
-import com.therogueroad.project.dto.PostTitleAndContentRequest;
 import com.therogueroad.project.models.Like;
 import com.therogueroad.project.models.Post;
 import com.therogueroad.project.models.User;
@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -32,26 +33,33 @@ public class PostServiceImpl implements PostService{
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private FileService fileService;
+
+
     @Override
-    public PostDTO createPost(PostTitleAndContentRequest postTitleAndContentRequest, PostDTO postDTO, String username) {
+    public PostDTO createPost(String title, String content, MultipartFile file, PostDTO postDTO, String username) {
         Post post = modelMapper.map(postDTO, Post.class);
 
 //        User user = new User("yoshi35", "yoshi@gmail.com", "meepmoop");
 //        user.setDisplayName("Yoshi Vennen");
 //        userRepository.save(user);
 
+        String fileUrl = fileService.saveFileToAWSS3Bucket(file);
+
+
         User user = userRepository.findByUserName(username).orElseThrow(() -> new RuntimeException("User Not Found"));
 
 
         List<Post> userPost = user.getUserPosts();
 
-        post.setTitle(postTitleAndContentRequest.getTitle());
+        post.setTitle(title);
         post.setUser(user);
         post.setUserName(user.getUserName());
         post.setDisplayName(user.getDisplayName());
         post.setProfilePic(user.getProfilePic());
-        post.setContent(postTitleAndContentRequest.getContent());
-        post.setPostImg(postTitleAndContentRequest.getPostImg());
+        post.setContent(content);
+        post.setPostImg(fileUrl);
         post.setCreatedAt(LocalDateTime.now());
 
         postRepository.save(post);
@@ -60,6 +68,9 @@ public class PostServiceImpl implements PostService{
 
         return modelMapper.map(post, PostDTO.class);
     }
+
+
+
 
     @Override
 //    public List<PostDTO> getAllPost() {
@@ -144,13 +155,15 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public PostDTO updatePost(PostDTO postDTO, Long postId) {
+    public PostDTO updatePost(String title, String content, MultipartFile file, PostDTO postDTO, Long postId) {
        Post post = postRepository.findById(postId).orElseThrow(()-> new RuntimeException("Post Not Found"));
+
+        String fileUrl = fileService.saveFileToAWSS3Bucket(file);
 
        post.setPostId(postId);
        post.setTitle(postDTO.getTitle());
        post.setContent(postDTO.getContent());
-       post.setPostImg(postDTO.getPostImg());
+       post.setPostImg(fileUrl);
        Like like = new Like();
        like.setPost(post);
 
