@@ -9,6 +9,8 @@ public class PostTitleAndContentRequest {
     private String content;
     @NotBlank
     private String title;
+    @NotBlank
+    private String postImg;
 
     public @NotBlank String getContent() {
         return content;

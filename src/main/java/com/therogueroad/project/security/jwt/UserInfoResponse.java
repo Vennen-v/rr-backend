@@ -9,9 +9,10 @@ public class UserInfoResponse {
     private String displayName;
     private List<String> roles;
 
-    public UserInfoResponse(Long id, String username, List<String> roles, String jwtToken) {
+    public UserInfoResponse(Long id, String username, String displayName, List<String> roles, String jwtToken) {
         this.id = id;
         this.username = username;
+        this.displayName = displayName;
         this.roles = roles;
         this.jwtToken = jwtToken;
     }

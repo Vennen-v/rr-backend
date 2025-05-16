@@ -31,6 +31,11 @@ public class UserController {
         return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.FOUND);
     }
 
+    @GetMapping("/user/{username}")
+    public ResponseEntity<UserDTOO> getUserByUserName(@PathVariable String username){
+        return new ResponseEntity<>(userService.getByUsername(username), HttpStatus.FOUND);
+    }
+
     @GetMapping("/users/search")
     public ResponseEntity<UserResponse> getUsersBySearch(@RequestParam(name = "keyword") String keyword,
                                                          @RequestParam(name = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,

@@ -32,6 +32,8 @@ public class Post {
 
     private String profilePic;
 
+    private String postImg;
+
     @Lob
     private String content;
 

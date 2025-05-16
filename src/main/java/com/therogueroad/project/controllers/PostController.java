@@ -2,6 +2,7 @@ package com.therogueroad.project.controllers;
 
 import com.therogueroad.project.dto.PostDTO;
 import com.therogueroad.project.dto.PostResponse;
+import com.therogueroad.project.dto.PostTitleAndContentRequest;
 import com.therogueroad.project.models.User;
 import com.therogueroad.project.repositories.UserRepository;
 import com.therogueroad.project.security.services.UserDetailsImpl;
@@ -26,9 +27,9 @@ public class PostController {
     private UserRepository userRepository;
 
     @PostMapping("/posts")
-    public ResponseEntity<PostDTO> createPost(@RequestBody PostDTO postDTO, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public ResponseEntity<PostDTO> createPost(@RequestBody PostTitleAndContentRequest postTitleAndContentRequest, PostDTO postDTO, @AuthenticationPrincipal UserDetailsImpl userDetails){
         String username = userDetails.getUsername();
-        return new ResponseEntity<>(postService.createPost(postDTO, username), HttpStatus.CREATED);
+        return new ResponseEntity<>(postService.createPost(postTitleAndContentRequest, postDTO, username), HttpStatus.CREATED);
     }
 
 //    @GetMapping("/posts")

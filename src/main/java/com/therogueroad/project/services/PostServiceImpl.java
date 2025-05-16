@@ -2,6 +2,7 @@ package com.therogueroad.project.services;
 
 import com.therogueroad.project.dto.PostDTO;
 import com.therogueroad.project.dto.PostResponse;
+import com.therogueroad.project.dto.PostTitleAndContentRequest;
 import com.therogueroad.project.models.Like;
 import com.therogueroad.project.models.Post;
 import com.therogueroad.project.models.User;
@@ -32,7 +33,7 @@ public class PostServiceImpl implements PostService{
     private ModelMapper modelMapper;
 
     @Override
-    public PostDTO createPost(PostDTO postDTO, String username) {
+    public PostDTO createPost(PostTitleAndContentRequest postTitleAndContentRequest, PostDTO postDTO, String username) {
         Post post = modelMapper.map(postDTO, Post.class);
 
 //        User user = new User("yoshi35", "yoshi@gmail.com", "meepmoop");
@@ -44,12 +45,13 @@ public class PostServiceImpl implements PostService{
 
         List<Post> userPost = user.getUserPosts();
 
-        post.setTitle(postDTO.getTitle());
+        post.setTitle(postTitleAndContentRequest.getTitle());
         post.setUser(user);
         post.setUserName(user.getUserName());
         post.setDisplayName(user.getDisplayName());
         post.setProfilePic(user.getProfilePic());
-        post.setContent(postDTO.getContent());
+        post.setContent(postTitleAndContentRequest.getContent());
+        post.setPostImg(postTitleAndContentRequest.getPostImg());
         post.setCreatedAt(LocalDateTime.now());
 
         postRepository.save(post);
@@ -148,6 +150,7 @@ public class PostServiceImpl implements PostService{
        post.setPostId(postId);
        post.setTitle(postDTO.getTitle());
        post.setContent(postDTO.getContent());
+       post.setPostImg(postDTO.getPostImg());
        Like like = new Like();
        like.setPost(post);
 

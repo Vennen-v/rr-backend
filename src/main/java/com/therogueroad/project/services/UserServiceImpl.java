@@ -48,6 +48,13 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public UserDTOO getByUsername(String username) {
+        User user = userRepository.findByUserName(username).orElseThrow(() -> new RuntimeException("User Not Found"));
+
+        return modelMapper.map(user, UserDTOO.class);
+    }
+
+    @Override
     public void followUser(Long userId, User user) {
         User toFollow = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User Not Found"));
 

@@ -16,6 +16,7 @@ public class PostNoUserDTO {
     private Long postId;
     private String title;
     private String content;
+    private String postImg;
     private List<LikeDTO> likes = new ArrayList<>();
     private List<CommentDTO> comments = new ArrayList<>();
     private Long saves = 0L;

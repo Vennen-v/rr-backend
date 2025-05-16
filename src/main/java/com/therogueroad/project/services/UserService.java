@@ -22,4 +22,6 @@ public interface UserService {
    UserResponse findByKeyword(String keyword, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
 
     List<UserDTOO> getFollowingPosts(User user);
+
+    UserDTOO getByUsername(String username);
 }

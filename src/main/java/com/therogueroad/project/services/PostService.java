@@ -2,13 +2,14 @@ package com.therogueroad.project.services;
 
 import com.therogueroad.project.dto.PostDTO;
 import com.therogueroad.project.dto.PostResponse;
+import com.therogueroad.project.dto.PostTitleAndContentRequest;
 import com.therogueroad.project.models.User;
 
 import java.util.List;
 
 public interface PostService {
 
-    PostDTO createPost(PostDTO postDTO, String username);
+    PostDTO createPost(PostTitleAndContentRequest postTitleAndContentRequest, PostDTO postDTO, String username);
 
     PostResponse getAllPost(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
 
