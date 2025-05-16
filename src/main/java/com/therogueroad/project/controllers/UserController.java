@@ -31,12 +31,12 @@ public class UserController {
 
     @GetMapping("/users")
     public ResponseEntity<List<UserDTO>> getAllUsers(){
-        return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.FOUND);
+        return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
 
     @GetMapping("/user/{username}")
     public ResponseEntity<UserDTOO> getUserByUserName(@PathVariable String username){
-        return new ResponseEntity<>(userService.getByUsername(username), HttpStatus.FOUND);
+        return new ResponseEntity<>(userService.getByUsername(username), HttpStatus.OK);
     }
 
     @PutMapping("/user/update")
@@ -72,19 +72,19 @@ public class UserController {
                                                          @RequestParam(name = "sortBy", defaultValue = "userId", required = false) String sortBy,
                                                          @RequestParam(name = "sortOrder", defaultValue = "desc", required = false) String sortOrder
                                                         ){
-        return new ResponseEntity<>(userService.findByKeyword(keyword, pageNumber, pageSize, sortBy, sortOrder), HttpStatus.FOUND);
+        return new ResponseEntity<>(userService.findByKeyword(keyword, pageNumber, pageSize, sortBy, sortOrder), HttpStatus.OK);
     }
 
     @GetMapping("/user/followers")
     public ResponseEntity<List<UserDTO>> getFollowers(@AuthenticationPrincipal UserDetailsImpl userDetails){
         User user = userRepository.findByUserName(userDetails.getUsername()).orElseThrow(() -> new RuntimeException("User Not Found"));
-        return new ResponseEntity<>(userService.getFollowers(user), HttpStatus.FOUND);
+        return new ResponseEntity<>(userService.getFollowers(user), HttpStatus.OK);
     }
 
     @GetMapping("/user/following")
     public ResponseEntity<List<UserDTO>> getFollowing(@AuthenticationPrincipal UserDetailsImpl userDetails){
         User user = userRepository.findByUserName(userDetails.getUsername()).orElseThrow(() -> new RuntimeException("User Not Found"));
-        return new ResponseEntity<>(userService.getFollowing(user), HttpStatus.FOUND);
+        return new ResponseEntity<>(userService.getFollowing(user), HttpStatus.OK);
     }
 
     @PostMapping("/user/follow/{userId}")
@@ -104,7 +104,7 @@ public class UserController {
     @GetMapping("/user/following/posts")
     public ResponseEntity<List<UserDTOO>> getFollowersPosts(@AuthenticationPrincipal UserDetailsImpl userDetails){
         User user = userRepository.findByUserName(userDetails.getUsername()).orElseThrow(() -> new RuntimeException("User Not Found"));
-        return new ResponseEntity<>(userService.getFollowingPosts(user), HttpStatus.FOUND);
+        return new ResponseEntity<>(userService.getFollowingPosts(user), HttpStatus.OK);
     }
 
 

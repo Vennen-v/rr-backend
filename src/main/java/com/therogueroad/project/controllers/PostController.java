@@ -44,12 +44,12 @@ public class PostController {
             @RequestParam(name = "sortBy", defaultValue = "postId", required = false) String sortBy,
             @RequestParam(name = "sortOrder", defaultValue = "asc", required = false) String sortOrder
     ){
-        return new ResponseEntity<>(postService.getAllPost(pageNumber, pageSize, sortBy, sortOrder), HttpStatus.FOUND);
+        return new ResponseEntity<>(postService.getAllPost(pageNumber, pageSize, sortBy, sortOrder), HttpStatus.OK);
     }
 
     @GetMapping("/posts/{postId}")
     public ResponseEntity<PostDTO> getPostById(@PathVariable Long postId){
-        return new ResponseEntity<>(postService.getPost(postId), HttpStatus.FOUND);
+        return new ResponseEntity<>(postService.getPost(postId), HttpStatus.OK);
     }
 
 
@@ -60,7 +60,7 @@ public class PostController {
                                                           @RequestParam(name = "sortBy", defaultValue = "postId", required = false) String sortBy,
                                                           @RequestParam(name = "sortOrder", defaultValue = "desc", required = false) String sortOrder
                                                           ){
-        return new ResponseEntity<>(postService.getPostsByUserId(userId, pageNumber, pageSize, sortBy, sortOrder), HttpStatus.FOUND);
+        return new ResponseEntity<>(postService.getPostsByUserId(userId, pageNumber, pageSize, sortBy, sortOrder), HttpStatus.OK);
     }
 
     @GetMapping("/posts/search")
@@ -69,7 +69,7 @@ public class PostController {
                                                         @RequestParam(name = "pageSize", defaultValue = "12", required = false) Integer pageSize,
                                                         @RequestParam(name = "sortBy", defaultValue = "postId", required = false) String sortBy,
                                                         @RequestParam(name = "sortOrder", defaultValue = "desc", required = false) String sortOrder){
-        return new ResponseEntity<>(postService.findByKeyword(keyword, pageNumber, pageSize, sortBy, sortOrder), HttpStatus.FOUND);
+        return new ResponseEntity<>(postService.findByKeyword(keyword, pageNumber, pageSize, sortBy, sortOrder), HttpStatus.OK);
     }
 
     @DeleteMapping("/posts/{postId}")
@@ -100,13 +100,13 @@ public class PostController {
     @GetMapping("/posts/user/current")
     public ResponseEntity<List<PostDTO>> getPostsByCurrentUser(@AuthenticationPrincipal UserDetailsImpl userDetails){
         User user = userRepository.findByUserName(userDetails.getUsername()).orElseThrow(() -> new RuntimeException("User Not Found"));
-        return new ResponseEntity<>(postService.getPostsByCurrentUser(user), HttpStatus.FOUND);
+        return new ResponseEntity<>(postService.getPostsByCurrentUser(user), HttpStatus.OK);
     }
 
     @GetMapping("/user/bookmarks")
     public ResponseEntity<List<PostDTO>> getUserSavedPosts(@AuthenticationPrincipal UserDetailsImpl userDetails){
         String username = userDetails.getUsername();
-        return new ResponseEntity<>(postService.getBookmarks(username), HttpStatus.FOUND);
+        return new ResponseEntity<>(postService.getBookmarks(username), HttpStatus.OK);
     }
 
 }

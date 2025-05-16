@@ -41,7 +41,7 @@ public class LikesController {
     @GetMapping("/user/likes")
     public ResponseEntity<List<LikeDTO>> getUserLikes(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         User user = userRepository.findByUserName(userDetails.getUsername()).orElseThrow(() -> new RuntimeException("User Not Found"));
-        return new ResponseEntity<>(likesService.getCurrentUserLikes(user), HttpStatus.FOUND);
+        return new ResponseEntity<>(likesService.getCurrentUserLikes(user), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/like/{likeId}")

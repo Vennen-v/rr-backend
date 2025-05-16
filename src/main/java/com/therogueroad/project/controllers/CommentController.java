@@ -38,12 +38,12 @@ public class CommentController {
 
     @GetMapping("/comments")
     public ResponseEntity<List<CommentDTO>> getAllComments(){
-        return new ResponseEntity<>(commentService.getAllComments(), HttpStatus.FOUND);
+        return new ResponseEntity<>(commentService.getAllComments(), HttpStatus.OK);
     }
 
     @GetMapping("/comments/{commentId}")
     public ResponseEntity<CommentDTO> findCommentById(@PathVariable Long commentId){
-        return new ResponseEntity<>(commentService.findComment(commentId), HttpStatus.FOUND);
+        return new ResponseEntity<>(commentService.findComment(commentId), HttpStatus.OK);
     }
 
     @DeleteMapping("/comments/delete/user/{commentId}")
