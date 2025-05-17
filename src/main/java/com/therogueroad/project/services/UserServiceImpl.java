@@ -29,18 +29,18 @@ public class UserServiceImpl implements UserService{
     private FileService fileService;
 
     @Override
-    public List<UserDTO> getFollowing(User user) {
+    public List<UserDTOO> getFollowing(User user) {
         List<User> userFollowing = user.getFollowing();
 
-        return userFollowing.stream().map(uf -> modelMapper.map(uf, UserDTO.class)).toList();
+        return userFollowing.stream().map(uf -> modelMapper.map(uf, UserDTOO.class)).toList();
     }
 
 
     @Override
-    public List<UserDTO> getFollowers(User user) {
+    public List<UserDTOO> getFollowers(User user) {
         List<User> userFollowers = user.getFollowers();
 
-        return userFollowers.stream().map(uf -> modelMapper.map(uf, UserDTO.class)).toList();
+        return userFollowers.stream().map(uf -> modelMapper.map(uf, UserDTOO.class)).toList();
     }
 
 

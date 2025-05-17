@@ -12,9 +12,9 @@ public interface UserService {
 
     void followUser(Long userId, User userr);
 
-    List<UserDTO> getFollowers(User user);
+    List<UserDTOO> getFollowers(User user);
 
-    List<UserDTO> getFollowing(User user);
+    List<UserDTOO> getFollowing(User user);
 
     void unfollowUser(Long userId, User user);
 

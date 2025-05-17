@@ -21,5 +21,6 @@ public class UserDTOO {
     private String bio;
     private String profilePic;
     private List<PostNoUserDTO> userPosts;
+    private List<UserDTO> followers;
 
 }

@@ -76,13 +76,13 @@ public class UserController {
     }
 
     @GetMapping("/user/followers")
-    public ResponseEntity<List<UserDTO>> getFollowers(@AuthenticationPrincipal UserDetailsImpl userDetails){
+    public ResponseEntity<List<UserDTOO>> getFollowers(@AuthenticationPrincipal UserDetailsImpl userDetails){
         User user = userRepository.findByUserName(userDetails.getUsername()).orElseThrow(() -> new RuntimeException("User Not Found"));
         return new ResponseEntity<>(userService.getFollowers(user), HttpStatus.OK);
     }
 
     @GetMapping("/user/following")
-    public ResponseEntity<List<UserDTO>> getFollowing(@AuthenticationPrincipal UserDetailsImpl userDetails){
+    public ResponseEntity<List<UserDTOO>> getFollowing(@AuthenticationPrincipal UserDetailsImpl userDetails){
         User user = userRepository.findByUserName(userDetails.getUsername()).orElseThrow(() -> new RuntimeException("User Not Found"));
         return new ResponseEntity<>(userService.getFollowing(user), HttpStatus.OK);
     }

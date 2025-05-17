@@ -1,6 +1,7 @@
 package com.therogueroad.project.controllers;
 
 import com.therogueroad.project.dto.UserDTO;
+import com.therogueroad.project.dto.UserDTOO;
 import com.therogueroad.project.models.AppRole;
 import com.therogueroad.project.models.Role;
 import com.therogueroad.project.models.User;
@@ -122,9 +123,9 @@ public class AuthController {
     }
 
     @GetMapping("/user")
-    public ResponseEntity<UserDTO> getUserDetails(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<UserDTOO> getUserDetails(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         User user = userRepository.findByUserName(userDetails.getUsername()).orElseThrow(() -> new RuntimeException("User Not Found"));
-        return new ResponseEntity<>(modelMapper.map(user, UserDTO.class), HttpStatus.OK);
+        return new ResponseEntity<>(modelMapper.map(user, UserDTOO.class), HttpStatus.OK);
     }
 
 
