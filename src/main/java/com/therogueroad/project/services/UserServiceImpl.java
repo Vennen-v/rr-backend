@@ -3,6 +3,7 @@ package com.therogueroad.project.services;
 import com.therogueroad.project.dto.UserDTO;
 import com.therogueroad.project.dto.UserDTOO;
 import com.therogueroad.project.dto.UserResponse;
+import com.therogueroad.project.models.Post;
 import com.therogueroad.project.models.User;
 import com.therogueroad.project.repositories.PostRepository;
 import com.therogueroad.project.repositories.UserRepository;
@@ -16,7 +17,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -39,6 +43,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public List<UserDTOO> getFollowing(User user) {
         List<User> userFollowing = user.getFollowing();
+
 
         return userFollowing.stream().map(uf -> modelMapper.map(uf, UserDTOO.class)).toList();
     }

@@ -42,7 +42,7 @@ public class PostController {
             @RequestParam(name = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
             @RequestParam(name = "pageSize", defaultValue = "12", required = false) Integer pageSize,
             @RequestParam(name = "sortBy", defaultValue = "postId", required = false) String sortBy,
-            @RequestParam(name = "sortOrder", defaultValue = "asc", required = false) String sortOrder
+            @RequestParam(name = "sortOrder", defaultValue = "desc", required = false) String sortOrder
     ){
         return new ResponseEntity<>(postService.getAllPost(pageNumber, pageSize, sortBy, sortOrder), HttpStatus.OK);
     }
