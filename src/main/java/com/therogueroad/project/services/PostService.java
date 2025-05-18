@@ -17,7 +17,7 @@ public interface PostService {
 
     void deletePost(Long postId);
 
-    PostDTO updatePost(String title, String content, MultipartFile file, PostDTO postDTO, Long postId);
+    PostDTO updatePost(String title, String content, MultipartFile file, Long postId);
 
     PostDTO getPost(Long postId);
 

@@ -1,5 +1,6 @@
 package com.therogueroad.project.repositories;
 
+import com.therogueroad.project.dto.PostDTO;
 import com.therogueroad.project.models.Post;
 import com.therogueroad.project.models.User;
 import org.springframework.data.domain.Page;
@@ -18,4 +19,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Page<Post> findByUserOrderByCreatedAtAsc(User user, Pageable pageDetails);
 
     Page<Post> findByUser(User user, Pageable pageDetails);
-}
+
+    Post findByUser(User user);
+};

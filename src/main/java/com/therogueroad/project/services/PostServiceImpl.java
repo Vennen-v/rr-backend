@@ -155,17 +155,25 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public PostDTO updatePost(String title, String content, MultipartFile file, PostDTO postDTO, Long postId) {
+    public PostDTO updatePost(String title, String content, MultipartFile file, Long postId) {
        Post post = postRepository.findById(postId).orElseThrow(()-> new RuntimeException("Post Not Found"));
 
-        String fileUrl = fileService.saveFileToAWSS3Bucket(file);
+       String fileUrl;
+
+       if(file == null){
+           fileUrl = post.getPostImg();
+       } else {
+           fileUrl = fileService.saveFileToAWSS3Bucket(file);
+
+       }
 
        post.setPostId(postId);
-       post.setTitle(postDTO.getTitle());
-       post.setContent(postDTO.getContent());
+       post.setTitle(title);
+       post.setContent(content);
        post.setPostImg(fileUrl);
-       Like like = new Like();
-       like.setPost(post);
+       post.setProfilePic(post.getProfilePic());
+//       Like like = new Like();
+//       like.setPost(post);
 
        postRepository.save(post);
 

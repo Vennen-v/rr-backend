@@ -4,6 +4,7 @@ import com.therogueroad.project.dto.UserDTO;
 import com.therogueroad.project.dto.UserDTOO;
 import com.therogueroad.project.dto.UserResponse;
 import com.therogueroad.project.models.User;
+import com.therogueroad.project.repositories.PostRepository;
 import com.therogueroad.project.repositories.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -21,6 +23,12 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PostRepository postRepository;
+
+    @Autowired
+    private PostService postService;
 
     @Autowired
     ModelMapper modelMapper;
@@ -78,6 +86,7 @@ public class UserServiceImpl implements UserService{
 
         String fileUrl = fileService.saveFileToAWSS3Bucket(file);
         user.setProfilePic(fileUrl);
+        user.getUserPosts().forEach(post -> {post.setProfilePic(fileUrl); postRepository.save(post);});
 
         userRepository.save(user);
     }

@@ -86,8 +86,8 @@ public class PostController {
     }
 
     @PutMapping("/posts/{postId}")
-    public ResponseEntity<PostDTO> updatePost(@RequestPart(value = "title", required = false) String title, @RequestPart(value = "content", required = false) String content,  @RequestPart(value = "file", required = false) MultipartFile file, PostDTO postDTO, @PathVariable Long postId){
-        return new ResponseEntity<>(postService.updatePost(title, content, file, postDTO, postId), HttpStatus.OK);
+    public ResponseEntity<PostDTO> updatePost(@RequestPart(value = "title", required = false) String title, @RequestPart(value = "content", required = false) String content,  @RequestPart(value = "file", required = false) MultipartFile file,  @PathVariable Long postId){
+        return new ResponseEntity<>(postService.updatePost(title, content, file, postId), HttpStatus.OK);
     }
 
     @PutMapping("/posts/save/{postId}")
