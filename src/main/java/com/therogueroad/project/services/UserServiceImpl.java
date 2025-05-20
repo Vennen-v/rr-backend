@@ -97,6 +97,13 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public Boolean isFollowingUser(String username, User user) {
+        User checkedUser = userRepository.findByUserName(username).orElseThrow(() -> new RuntimeException("User Not Found"));
+
+        return user.getFollowing().contains(checkedUser);
+    }
+
+    @Override
     public void followUser(Long userId, User user) {
         User toFollow = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User Not Found"));
 

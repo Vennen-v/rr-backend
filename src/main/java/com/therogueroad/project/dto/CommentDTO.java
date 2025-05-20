@@ -18,7 +18,7 @@ public class CommentDTO {
     private String displayName;
     private String profilePic;
     private List<CommentDTO> replies;
-    private List<LikeDTO> likes;
+    private Long likes = 0L;
     private LocalDateTime createdAt;
 
 

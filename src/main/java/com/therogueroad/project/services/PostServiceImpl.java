@@ -3,7 +3,6 @@ package com.therogueroad.project.services;
 
 import com.therogueroad.project.dto.PostDTO;
 import com.therogueroad.project.dto.PostResponse;
-import com.therogueroad.project.models.Like;
 import com.therogueroad.project.models.Post;
 import com.therogueroad.project.models.User;
 import com.therogueroad.project.repositories.PostRepository;
@@ -155,6 +154,25 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
+    public void removeSave(Long postId, User user) {
+        Post post = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("Post Not Found"));
+        List<Post> userSaves = user.getSavedPosts();
+        userSaves.remove(post);
+        post.setSaves(post.getLikes() - 1);
+        postRepository.save(post);
+        userRepository.save(user);
+    }
+
+    @Override
+    public Boolean isPostSaved(Long postId, User user) {
+        Post post = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("Post Not Found"));
+
+        return user.getSavedPosts().contains(post);
+
+    }
+
+
+    @Override
     public PostDTO updatePost(String title, String content, MultipartFile file, Long postId) {
        Post post = postRepository.findById(postId).orElseThrow(()-> new RuntimeException("Post Not Found"));
 
@@ -238,6 +256,8 @@ public class PostServiceImpl implements PostService{
 
         return modelMapper.map(post, PostDTO.class);
     }
+
+
 
     @Override
     public List<PostDTO> getBookmarks(String username) {

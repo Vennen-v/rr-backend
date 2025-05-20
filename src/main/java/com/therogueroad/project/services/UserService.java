@@ -29,4 +29,6 @@ public interface UserService {
     void updateUserInfo(UserDTO userDTO, User user);
 
     void updateProfilePic(MultipartFile file, User user);
+
+    Boolean isFollowingUser(String username, User user);
 }

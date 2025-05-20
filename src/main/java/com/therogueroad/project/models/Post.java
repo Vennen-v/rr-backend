@@ -40,8 +40,8 @@ public class Post {
     @NotBlank
     private String content;
 
-    @OneToMany(mappedBy = "post")
-    private List<Like> likes;
+
+    private Long likes = 0L;
 
     @OneToMany(mappedBy = "post")
     private List<Comment> comments;

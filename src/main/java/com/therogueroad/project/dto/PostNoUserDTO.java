@@ -19,7 +19,7 @@ public class PostNoUserDTO {
     private String displayName;
     private String profilePic;
     private String postImg;
-    private List<LikeDTO> likes = new ArrayList<>();
+    private Long likes = 0L;
     private List<CommentDTO> comments = new ArrayList<>();
     private Long saves = 0L;
     private LocalDateTime createdAt;

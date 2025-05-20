@@ -87,6 +87,12 @@ public class UserController {
         return new ResponseEntity<>(userService.getFollowing(user), HttpStatus.OK);
     }
 
+    @GetMapping("/isfollowing/{username}")
+    public ResponseEntity<Boolean> isFollowingUser(@PathVariable String username, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        User user = userRepository.findByUserName(userDetails.getUsername()).orElseThrow(() -> new RuntimeException("User Not Found"));
+        return new ResponseEntity<>(userService.isFollowingUser(username, user), HttpStatus.OK);
+    }
+
     @PostMapping("/user/follow/{userId}")
     public ResponseEntity<String> followUser(@PathVariable Long userId, @AuthenticationPrincipal UserDetailsImpl userDetails){
         User user = userRepository.findByUserName(userDetails.getUsername()).orElseThrow(() -> new RuntimeException("User Not Found"));

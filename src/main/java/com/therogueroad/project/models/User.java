@@ -64,9 +64,9 @@ public class User {
     @JoinColumn(name = "saved_posts")
     private List<Post> savedPosts;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToMany( fetch = FetchType.LAZY)
     @Column(name = "liked_posts")
-    private List<Like> likedPosts = new ArrayList<>();
+    private List<Post> likedPosts = new ArrayList<>();
 
     @OneToMany( fetch = FetchType.LAZY)
     @JoinColumn(name = "following_id" )
@@ -91,7 +91,7 @@ public class User {
         this.password = password;
     }
 
-    public User(Long userId, String displayName, String userName, String email, String password, String profilePic, List<Post> savedPosts, List<Like> likedPosts, List<User> following, List<User> followers) {
+    public User(Long userId, String displayName, String userName, String email, String password, String profilePic, List<Post> savedPosts, List<Post> likedPosts, List<User> following, List<User> followers) {
         this.userId = userId;
         this.displayName = displayName;
         this.userName = userName;

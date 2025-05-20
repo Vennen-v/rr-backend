@@ -109,4 +109,17 @@ public class PostController {
         return new ResponseEntity<>(postService.getBookmarks(username), HttpStatus.OK);
     }
 
+    @DeleteMapping("/delete/save/{postId}")
+    public ResponseEntity<String> removeSave(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        User user = userRepository.findByUserName(userDetails.getUsername()).orElseThrow(() -> new RuntimeException("User Not Found"));
+        postService.removeSave(postId, user);
+        return new ResponseEntity<>("Save Removed Successfully", HttpStatus.OK);
+    }
+
+    @GetMapping("/isSaved/{postId}")
+    public ResponseEntity<Boolean> isPostSaved(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        User user = userRepository.findByUserName(userDetails.getUsername()).orElseThrow(() -> new RuntimeException("User Not Found"));
+
+        return new ResponseEntity<>(postService.isPostSaved(postId, user), HttpStatus.OK);
+    }
 }

@@ -30,4 +30,8 @@ public interface PostService {
     List<PostDTO> getBookmarks(String username);
 
     void deleteOwnPost(Long postId, User user);
+
+    void removeSave(Long postId, User user);
+
+    Boolean isPostSaved(Long postId, User user);
 }
