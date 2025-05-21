@@ -5,7 +5,9 @@ package com.therogueroad.project.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.modelmapper.internal.bytebuddy.asm.Advice;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -22,5 +24,6 @@ public class UserDTOO {
     private String profilePic;
     private List<PostNoUserDTO> userPosts;
     private List<UserDTO> followers;
+    private LocalDateTime createdAt;
 
 }

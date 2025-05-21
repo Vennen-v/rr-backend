@@ -9,7 +9,9 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -84,6 +86,9 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
     public User(String userName, String displayName, String email, String password) {
         this.userName = userName;
         this.displayName = displayName;
@@ -91,7 +96,7 @@ public class User {
         this.password = password;
     }
 
-    public User(Long userId, String displayName, String userName, String email, String password, String profilePic, List<Post> savedPosts, List<Post> likedPosts, List<User> following, List<User> followers) {
+    public User(Long userId, String displayName, String userName, String email, String password, String profilePic, List<Post> savedPosts, List<Post> likedPosts, List<User> following, List<User> followers, LocalDateTime createdAt) {
         this.userId = userId;
         this.displayName = displayName;
         this.userName = userName;
@@ -102,6 +107,7 @@ public class User {
         this.likedPosts = likedPosts;
         this.following = following;
         this.followers = followers;
+        this.createdAt = createdAt;
     }
 
 }

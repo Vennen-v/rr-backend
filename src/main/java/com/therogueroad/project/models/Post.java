@@ -1,5 +1,6 @@
 package com.therogueroad.project.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -49,7 +50,8 @@ public class Post {
     private Long saves = 0L;
 
     @CreationTimestamp
-    private LocalDateTime createdAt;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime createdAt = LocalDateTime.now();
 
 
 }
