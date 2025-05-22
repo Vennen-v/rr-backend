@@ -158,7 +158,7 @@ public class PostServiceImpl implements PostService{
         Post post = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("Post Not Found"));
         List<Post> userSaves = user.getSavedPosts();
         userSaves.remove(post);
-        post.setSaves(post.getLikes() - 1);
+        post.setSaves(post.getSaves() == 0 ? 0 : post.getSaves() - 1);
         postRepository.save(post);
         userRepository.save(user);
     }

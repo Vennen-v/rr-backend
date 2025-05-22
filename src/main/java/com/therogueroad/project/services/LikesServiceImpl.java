@@ -68,7 +68,7 @@ public class LikesServiceImpl implements LikesService{
         Post post = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("Post Not Found"));
         List<Post> userLikes = user.getLikedPosts();
         userLikes.remove(post);
-        post.setLikes(post.getLikes() - 1);
+        post.setLikes(post.getLikes() == 0 ? 0 : post.getLikes() - 1);
         postRepository.save(post);
         userRepository.save(user);
 

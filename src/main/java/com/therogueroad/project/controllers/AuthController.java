@@ -9,9 +9,12 @@ import com.therogueroad.project.repositories.RoleRepository;
 import com.therogueroad.project.repositories.UserRepository;
 import com.therogueroad.project.security.jwt.*;
 import com.therogueroad.project.security.services.UserDetailsImpl;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -50,6 +53,9 @@ public class AuthController {
 
     @Autowired
     ModelMapper modelMapper;
+
+    @Value("${spring.rr.app.jwtCookieName}")
+    private String jwtCookie;
 
     @PostMapping("/auth/signin")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
@@ -126,6 +132,23 @@ public class AuthController {
     public ResponseEntity<UserDTOO> getUserDetails(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         User user = userRepository.findByUserName(userDetails.getUsername()).orElseThrow(() -> new RuntimeException("User Not Found"));
         return new ResponseEntity<>(modelMapper.map(user, UserDTOO.class), HttpStatus.OK);
+    }
+
+    @GetMapping("/check-cookie")
+    public ResponseEntity<String> checkHttpOnlyCookie(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+
+        if (cookies != null) {
+            Optional<Cookie> httpOnlyCookie = Arrays.stream(cookies)
+                    .filter(cookie -> jwtCookie.equals(cookie.getName()))
+                    .findFirst();
+
+            if (httpOnlyCookie.isPresent()) {
+                return new ResponseEntity<>("HttpOnly cookie found", HttpStatus.OK);
+            }
+        }
+
+        return new ResponseEntity<>("HttpOnly cookie not found", HttpStatus.OK);
     }
 
 

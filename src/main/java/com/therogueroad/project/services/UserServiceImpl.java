@@ -5,6 +5,7 @@ import com.therogueroad.project.dto.UserDTOO;
 import com.therogueroad.project.dto.UserResponse;
 import com.therogueroad.project.models.Post;
 import com.therogueroad.project.models.User;
+import com.therogueroad.project.repositories.CommentRepository;
 import com.therogueroad.project.repositories.PostRepository;
 import com.therogueroad.project.repositories.UserRepository;
 import org.modelmapper.ModelMapper;
@@ -33,6 +34,9 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     private PostService postService;
+
+    @Autowired
+    private CommentRepository commentRepository;
 
     @Autowired
     ModelMapper modelMapper;
@@ -76,8 +80,16 @@ public class UserServiceImpl implements UserService{
 
 
         user.setDisplayName(userDTO.getDisplayName());
+        user.getUserPosts().forEach(post -> {post.setDisplayName(userDTO.getDisplayName()); postRepository.save(post);});
+        user.getUserComments().forEach(comment -> {comment.setDisplayName(userDTO.getDisplayName()); commentRepository.save(comment);});
+
         user.setUserName(userDTO.getUserName());
+        user.getUserPosts().forEach(post -> {post.setUserName(userDTO.getUserName()); postRepository.save(post);});
+        user.getUserComments().forEach(comment -> {comment.setUserName(userDTO.getUserName()); commentRepository.save(comment);});
+
+
         user.setEmail(userDTO.getEmail());
+
         user.setBio(userDTO.getBio());
 
         userRepository.save(user);
@@ -92,6 +104,8 @@ public class UserServiceImpl implements UserService{
         String fileUrl = fileService.saveFileToAWSS3Bucket(file);
         user.setProfilePic(fileUrl);
         user.getUserPosts().forEach(post -> {post.setProfilePic(fileUrl); postRepository.save(post);});
+        user.getUserComments().forEach(comment -> {comment.setProfilePic(fileUrl); commentRepository.save(comment);});
+
 
         userRepository.save(user);
     }

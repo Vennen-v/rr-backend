@@ -1,5 +1,6 @@
 package com.therogueroad.project.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -31,7 +32,7 @@ public class User {
     @Column(name = "user_id")
     private Long userId;
 
-    @NotBlank
+
     @Size(max = 20)
     private String displayName;
 
@@ -62,6 +63,10 @@ public class User {
     @Column(name = "user_posts")
     private List<Post> userPosts = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @Column(name = "user_posts")
+    private List<Comment> userComments = new ArrayList<>();
+
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "saved_posts")
     private List<Post> savedPosts;
@@ -87,6 +92,7 @@ public class User {
     private Set<Role> roles;
 
     @CreationTimestamp
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
 
     public User(String userName, String displayName, String email, String password) {
