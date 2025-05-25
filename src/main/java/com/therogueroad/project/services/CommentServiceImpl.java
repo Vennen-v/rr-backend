@@ -55,7 +55,7 @@ public class CommentServiceImpl implements CommentService{
 
         commentRepository.save(comment);
 
-//        notificationService.sendCommentNotif(user.getUserName(), post.getUser().getUserId(), postId);
+        notificationService.sendCommentNotif(user.getUserName(), post.getUser().getUserId(), postId);
 
         return modelMapper.map(comment, CommentDTO.class);
     }

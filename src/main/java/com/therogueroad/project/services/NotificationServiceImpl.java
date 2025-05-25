@@ -64,18 +64,27 @@ public class NotificationServiceImpl implements NotificationService{
 
     }
 
-//    @Override
-//    public void sendCommentNotif(String actor, Long recipient, Long postId) {
-//        if (actor.equals(recipient)){
-//            return;
-//        }
-//
-//        Notification notification = new Notification(actor, recipient, NotificationType.COMMENT, postId);
-//        notificationRepository.save(notification);
-//
-//        messagingTemplate.convertAndSend("/topic/users/" + recipient + "/notifications", notification);
-//
-//    }
+    @Override
+    public void sendCommentNotif(String actor, Long recipient, Long postId) {
+        User actingUser = userRepository.findByUserName(actor).orElseThrow(()-> new RuntimeException("User Not Found"));
+
+        User receivingUser = userRepository.findById(recipient).orElseThrow(()-> new RuntimeException("User Not Found"));
+
+        if (actingUser.getUserId().equals(recipient)){
+            return;
+        }
+
+        Notification notification = new Notification(actor, recipient, NotificationType.COMMENT, postId);
+        notificationRepository.save(notification);
+        actingUser.getActedNotifs().add(notification);
+        receivingUser.getRecievedNotifs().add(notification);
+
+        userRepository.save(actingUser);
+        userRepository.save(receivingUser);
+
+        messagingTemplate.convertAndSend("/topic/users/" + recipient + "/notifications", notification);
+
+    }
 
     @Override
     public NotificationDTO markNotifAsRead(Long notificationId) {

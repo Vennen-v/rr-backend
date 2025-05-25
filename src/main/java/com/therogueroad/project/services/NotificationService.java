@@ -15,5 +15,5 @@ public interface NotificationService {
 
     void sendLikeNotif(String actor, Long recipientId, Long postId);
 
-//    void sendCommentNotif(String user, Long user1, Long commentId);
+    void sendCommentNotif(String user, Long user1, Long postId);
 }
