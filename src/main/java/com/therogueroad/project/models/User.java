@@ -75,11 +75,11 @@ public class User {
     @Column(name = "liked_posts")
     private List<Post> likedPosts = new ArrayList<>();
 
-    @OneToMany( fetch = FetchType.LAZY)
+    @OneToMany
     @JoinColumn(name = "following_id" )
     private List<User> following = new ArrayList<>();
 
-    @OneToMany( fetch = FetchType.LAZY)
+    @OneToMany
     @JoinColumn(name = "follower_id")
     private List<User> followers = new ArrayList<>();
 
