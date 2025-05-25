@@ -27,6 +27,9 @@ public class CommentServiceImpl implements CommentService{
     UserRepository userRepository;
 
     @Autowired
+    NotificationService notificationService;
+
+    @Autowired
     ModelMapper modelMapper;
 
     @Override
@@ -51,6 +54,8 @@ public class CommentServiceImpl implements CommentService{
         comment.setCreatedAt(LocalDateTime.now());
 
         commentRepository.save(comment);
+
+//        notificationService.sendCommentNotif(user.getUserName(), post.getUser().getUserId(), postId);
 
         return modelMapper.map(comment, CommentDTO.class);
     }

@@ -67,12 +67,12 @@ public class User {
     @Column(name = "user_posts")
     private List<Comment> userComments = new ArrayList<>();
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "saved_posts")
+    @ManyToMany
+    @JsonIgnore
     private List<Post> savedPosts;
 
-    @OneToMany( fetch = FetchType.LAZY)
-    @Column(name = "liked_posts")
+   @ManyToMany
+   @JsonIgnore
     private List<Post> likedPosts = new ArrayList<>();
 
     @OneToMany
@@ -82,6 +82,12 @@ public class User {
     @OneToMany
     @JoinColumn(name = "follower_id")
     private List<User> followers = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Notification> recievedNotifs;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Notification> actedNotifs;
 
     @Getter
     @Setter

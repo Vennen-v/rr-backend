@@ -2,6 +2,7 @@ package com.therogueroad.project.dto;
 
 
 
+import com.therogueroad.project.models.Notification;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

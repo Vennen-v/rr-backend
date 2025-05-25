@@ -1,10 +1,12 @@
 package com.therogueroad.project.services;
 
 import com.therogueroad.project.dto.PostDTO;
+import com.therogueroad.project.dto.UserDTO;
 import com.therogueroad.project.models.Post;
 import com.therogueroad.project.models.User;
 import com.therogueroad.project.repositories.CommentRepository;
 
+import com.therogueroad.project.repositories.NotificationRepository;
 import com.therogueroad.project.repositories.PostRepository;
 import com.therogueroad.project.repositories.UserRepository;
 import org.modelmapper.ModelMapper;
@@ -29,6 +31,9 @@ public class LikesServiceImpl implements LikesService{
     CommentRepository commentRepository;
 
     @Autowired
+    NotificationService notificationService;
+
+    @Autowired
     ModelMapper modelMapper;
 
     @Override
@@ -36,7 +41,6 @@ public class LikesServiceImpl implements LikesService{
         Post post = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("Post Not Found"));
 //
         User user = userRepository.findByUserName(username).orElseThrow(() -> new RuntimeException("User Not Found"));
-
 
         post.setLikes(post.getLikes() + 1);
 
@@ -46,8 +50,11 @@ public class LikesServiceImpl implements LikesService{
             List<Post> newLikeList = new ArrayList<>();
             user.setLikedPosts(newLikeList);
             newLikeList.add(post);
+            notificationService.sendLikeNotif(user.getUserName(), post.getUser().getUserId(), postId);
+
         } else {
             user.getLikedPosts().add(post);
+            notificationService.sendLikeNotif(user.getUserName(), post.getUser().getUserId(), postId);
         }
 
         userRepository.save(user);}
