@@ -77,10 +77,12 @@ public class User {
 
     @OneToMany
     @JoinColumn(name = "following_id" )
+    @JsonIgnore
     private List<User> following = new ArrayList<>();
 
     @OneToMany
     @JoinColumn(name = "follower_id")
+    @JsonIgnore
     private List<User> followers = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
@@ -88,6 +90,14 @@ public class User {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Notification> actedNotifs;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Conversation> conversationsAsAuthor;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "recipient", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Conversation> conversationsAsRecipient;
 
     @Getter
     @Setter

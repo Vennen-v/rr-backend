@@ -1,10 +1,10 @@
 package com.therogueroad.project.services;
 
+import com.therogueroad.project.dto.ConversationDTO;
+import com.therogueroad.project.dto.MessageDT;
 import com.therogueroad.project.dto.NotificationDTO;
 import com.therogueroad.project.dto.PostDTO;
-import com.therogueroad.project.models.Notification;
-import com.therogueroad.project.models.NotificationType;
-import com.therogueroad.project.models.User;
+import com.therogueroad.project.models.*;
 import com.therogueroad.project.repositories.NotificationRepository;
 import com.therogueroad.project.repositories.UserRepository;
 import org.modelmapper.ModelMapper;
@@ -84,6 +84,23 @@ public class NotificationServiceImpl implements NotificationService{
 
         messagingTemplate.convertAndSend("/topic/users/" + recipient + "/notifications", notification);
 
+    }
+
+    @Override
+    public void sendConvoToUsers(String userName, Long recipient, Conversation conversation) {
+        User sender = userRepository.findByUserName(userName).orElseThrow(()-> new RuntimeException("User Not Found"));
+      ConversationDTO conversationDTO =  modelMapper.map(conversation, ConversationDTO.class);
+
+        messagingTemplate.convertAndSend("/topic/users/" + sender.getUserId() + "/conversations", conversationDTO);
+        messagingTemplate.convertAndSend("/topic/users/" + recipient + "/conversations", conversationDTO);
+
+    }
+
+    @Override
+    public void sendMessageToConversation(Long conversationId, Message message) {
+        MessageDT messageDT = modelMapper.map(message, MessageDT.class);
+
+        messagingTemplate.convertAndSend("/topic/conversations/" + conversationId + "/messages", messageDT);
     }
 
     @Override
