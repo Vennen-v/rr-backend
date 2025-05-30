@@ -34,5 +34,9 @@ public interface UserService {
 
     void generatePasswordResetToken(String email);
 
+    void generateEmailVerificationToken(String email);
+
     void resetPassword(String token, String newPassword);
+
+    void verifyEmail(String token);
 }

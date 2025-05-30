@@ -55,6 +55,7 @@ public class AuthController {
     @Autowired
     UserService userService;
 
+
     @Autowired
     ModelMapper modelMapper;
 
@@ -121,6 +122,7 @@ public class AuthController {
 
         user.setRoles(roles);
         userRepository.save(user);
+        userService.generateEmailVerificationToken(signUpRequest.getEmail());
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
 
@@ -177,5 +179,29 @@ public class AuthController {
             return ResponseEntity.internalServerError().body(new MessageResponse("Error resetting password!"));
         }
     }
+
+    @PostMapping("/email-verification")
+    public ResponseEntity<?> emailVerification(@RequestParam String email){
+
+        try {
+            userService.generateEmailVerificationToken(email);
+            return ResponseEntity.ok(new MessageResponse("Verification link sent!"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body(new MessageResponse("Error sending verification link!"));
+        }
+    }
+
+    @PostMapping("/verify-email")
+    public ResponseEntity<?> verifyEmail(@RequestParam String token) {
+        try {
+            userService.verifyEmail(token);
+            return ResponseEntity.ok(new MessageResponse("Email Verification successful"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body(new MessageResponse("Error: Couldn't Verify email"));
+        }
+    }
+
 }
 

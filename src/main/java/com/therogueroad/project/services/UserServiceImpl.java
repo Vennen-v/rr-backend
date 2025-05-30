@@ -3,12 +3,10 @@ package com.therogueroad.project.services;
 import com.therogueroad.project.dto.UserDTO;
 import com.therogueroad.project.dto.UserDTOO;
 import com.therogueroad.project.dto.UserResponse;
+import com.therogueroad.project.models.EmailVerificationToken;
 import com.therogueroad.project.models.PasswordResetToken;
 import com.therogueroad.project.models.User;
-import com.therogueroad.project.repositories.CommentRepository;
-import com.therogueroad.project.repositories.PasswordResetTokenRepository;
-import com.therogueroad.project.repositories.PostRepository;
-import com.therogueroad.project.repositories.UserRepository;
+import com.therogueroad.project.repositories.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,6 +43,9 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     private PasswordResetTokenRepository passwordResetTokenRepository;
+
+    @Autowired
+    private EmailVerificationTokenRepository emailVerificationTokenRepository;
 
     @Autowired
     private EmailService emailService;
@@ -231,6 +232,22 @@ return userResponse;
     }
 
     @Override
+    public void generateEmailVerificationToken(String email){
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not Found"));
+
+        String token = UUID.randomUUID().toString();
+        Instant expiryDate = Instant.now().plus(3, ChronoUnit.DAYS);
+
+        EmailVerificationToken verificationToken = new EmailVerificationToken(token, expiryDate, user);
+        emailVerificationTokenRepository.save(verificationToken);
+
+        String verificationUrl = frontendURL + "email-verification?link=" + token;
+
+        emailService.sendEmailVerificationLink(user.getEmail(), verificationUrl);
+
+    }
+
+    @Override
     public void resetPassword(String token, String newPassword) {
         PasswordResetToken resetToken = passwordResetTokenRepository.findByToken(token).orElseThrow(()-> new RuntimeException("Reset token is invalid"));
 
@@ -248,6 +265,34 @@ return userResponse;
 
         resetToken.setUsed(true);
         passwordResetTokenRepository.save(resetToken);
+    }
+
+    @Override
+    public void verifyEmail(String token) {
+        EmailVerificationToken verificationToken = emailVerificationTokenRepository.findByToken(token).orElseThrow(()-> new RuntimeException("Token is invalid"));
+
+        if(verificationToken.isUsed()){
+            throw new RuntimeException("Verification token has already been used");
+        }
+
+        if(verificationToken.getExpiryDate().isBefore(Instant.now())){
+            throw new RuntimeException("Email Verification token has expired");
+        }
+
+        if (token != null) {
+        User user = verificationToken.getUser();
+            user.setEmailVerified(true);
+            userRepository.save(user);
+            verificationToken.setUsed(true);
+            emailVerificationTokenRepository.save(verificationToken);
+        } else {
+            throw new RuntimeException("The Verification Token does not exist");
+        }
+
+
+
+
+
     }
 
 
