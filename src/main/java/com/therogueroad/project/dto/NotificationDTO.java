@@ -22,6 +22,7 @@ public class NotificationDTO {
     private boolean isRead;
     private NotificationType type;
     private Long resourceId;
+    private String resourceString;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
 }

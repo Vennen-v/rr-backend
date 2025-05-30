@@ -26,7 +26,11 @@ public class Notification {
 
     private NotificationType type;
 
+    @Column(nullable = true)
     private Long resourceId;
+
+    @Column(nullable = true)
+    private String resourceString;
 
     @CreationTimestamp
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -38,6 +42,14 @@ public class Notification {
         this.isRead = false;
         this.type = type;
         this.resourceId = resourceId;
+    }
+
+    public Notification(String actor, Long recipient, NotificationType type, String resourceString) {
+        this.actor = actor;
+        this.recipient = recipient;
+        this.isRead = false;
+        this.type = type;
+        this.resourceString = resourceString;
     }
 
     public boolean isRead() {

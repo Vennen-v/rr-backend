@@ -31,4 +31,8 @@ public interface UserService {
     void updateProfilePic(MultipartFile file, User user);
 
     Boolean isFollowingUser(String username, User user);
+
+    void generatePasswordResetToken(String email);
+
+    void resetPassword(String token, String newPassword);
 }

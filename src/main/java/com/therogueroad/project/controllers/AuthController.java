@@ -9,6 +9,7 @@ import com.therogueroad.project.repositories.RoleRepository;
 import com.therogueroad.project.repositories.UserRepository;
 import com.therogueroad.project.security.jwt.*;
 import com.therogueroad.project.security.services.UserDetailsImpl;
+import com.therogueroad.project.services.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -50,6 +51,9 @@ public class AuthController {
 
     @Autowired
     PasswordEncoder passwordEncoder;
+
+    @Autowired
+    UserService userService;
 
     @Autowired
     ModelMapper modelMapper;
@@ -151,5 +155,27 @@ public class AuthController {
         return new ResponseEntity<>("HttpOnly cookie not found", HttpStatus.OK);
     }
 
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(@RequestParam String email){
 
+        try {
+            userService.generatePasswordResetToken(email);
+            return ResponseEntity.ok(new MessageResponse("Reset token sent!"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body(new MessageResponse("Error sending reset token"));
+        }
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestParam String token, @RequestParam String newPassword) {
+        try {
+            userService.resetPassword(token, newPassword);
+            return ResponseEntity.ok(new MessageResponse("Password reset successful"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body(new MessageResponse("Error resetting password!"));
+        }
+    }
 }
+

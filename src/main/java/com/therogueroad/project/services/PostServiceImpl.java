@@ -139,6 +139,11 @@ public class PostServiceImpl implements PostService{
     @Override
     public void deletePost(Long postId) {
         Post deletedPost = postRepository.findById(postId).orElseThrow(()-> new RuntimeException("Post Not Found"));
+       List<User> userList = userRepository.findAll();
+       userList.forEach(user -> {
+           user.getLikedPosts().remove(postId);
+           userRepository.save(user);
+       });
         postRepository.delete(deletedPost);
     }
 
@@ -147,6 +152,11 @@ public class PostServiceImpl implements PostService{
         Post deletedPost = postRepository.findById(postId).orElseThrow(()-> new RuntimeException("Post Not Found"));
 
         if (deletedPost.getUser().equals(user)){
+            List<User> userList = userRepository.findAll();
+            userList.forEach(u -> {
+                u.getLikedPosts().remove(deletedPost);
+                userRepository.save(u);
+            });
         postRepository.delete(deletedPost);
         } else {
             throw new RuntimeException("User does not match");

@@ -3,7 +3,6 @@ package com.therogueroad.project.services;
 import com.therogueroad.project.dto.NotificationDTO;
 import com.therogueroad.project.models.Conversation;
 import com.therogueroad.project.models.Message;
-import com.therogueroad.project.models.Notification;
 import com.therogueroad.project.models.User;
 
 
@@ -22,4 +21,6 @@ public interface NotificationService {
     void sendConvoToUsers(String userName, Long userId, Conversation conversation);
 
     void sendMessageToConversation(Long conversationId, Message message);
+
+    void sendFollowNotif(String actor, Long recipientId);
 }

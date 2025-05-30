@@ -42,6 +42,28 @@ public class NotificationServiceImpl implements NotificationService{
     }
 
     @Override
+    public void sendFollowNotif(String actor, Long recipientId) {
+        User actingUser = userRepository.findByUserName(actor).orElseThrow(()-> new RuntimeException("User Not Found"));
+
+        User receivingUser = userRepository.findById(recipientId).orElseThrow(()-> new RuntimeException("User Not Found"));
+
+        if (actingUser.getUserId().equals(recipientId)){
+            return;
+        }
+
+        Notification notification = new Notification(actor, recipientId, NotificationType.FOLLOW, actor);
+        notificationRepository.save(notification);
+        actingUser.getActedNotifs().add(notification);
+        receivingUser.getRecievedNotifs().add(notification);
+
+        userRepository.save(actingUser);
+        userRepository.save(receivingUser);
+
+        messagingTemplate.convertAndSend("/topic/users/" + recipientId + "/notifications", notification);
+
+    }
+
+    @Override
     public void sendLikeNotif(String actor, Long recipient, Long postId) {
 
         User actingUser = userRepository.findByUserName(actor).orElseThrow(()-> new RuntimeException("User Not Found"));
@@ -102,6 +124,8 @@ public class NotificationServiceImpl implements NotificationService{
 
         messagingTemplate.convertAndSend("/topic/conversations/" + conversationId + "/messages", messageDT);
     }
+
+
 
     @Override
     public NotificationDTO markNotifAsRead(Long notificationId) {

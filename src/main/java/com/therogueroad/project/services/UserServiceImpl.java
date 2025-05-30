@@ -3,25 +3,27 @@ package com.therogueroad.project.services;
 import com.therogueroad.project.dto.UserDTO;
 import com.therogueroad.project.dto.UserDTOO;
 import com.therogueroad.project.dto.UserResponse;
-import com.therogueroad.project.models.Post;
+import com.therogueroad.project.models.PasswordResetToken;
 import com.therogueroad.project.models.User;
 import com.therogueroad.project.repositories.CommentRepository;
+import com.therogueroad.project.repositories.PasswordResetTokenRepository;
 import com.therogueroad.project.repositories.PostRepository;
 import com.therogueroad.project.repositories.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Arrays;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -39,10 +41,25 @@ public class UserServiceImpl implements UserService{
     private CommentRepository commentRepository;
 
     @Autowired
+    private NotificationService notificationService;
+
+    @Autowired
+    private PasswordResetTokenRepository passwordResetTokenRepository;
+
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
+    @Autowired
     ModelMapper modelMapper;
 
     @Autowired
     private FileService fileService;
+
+    @Value("${frontend.url}")
+    String frontendURL;
 
     @Override
     public List<UserDTOO> getFollowing(User user) {
@@ -127,6 +144,9 @@ public class UserServiceImpl implements UserService{
 
             userRepository.save(user);
             userRepository.save(toFollow);
+
+            notificationService.sendFollowNotif(user.getUserName(), toFollow.getUserId());
+
         } else {
            throw new RuntimeException("You cant follow yourself");
         }
@@ -194,6 +214,41 @@ public class UserServiceImpl implements UserService{
 return userResponse;
     }
 
+    @Override
+    public void generatePasswordResetToken(String email){
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not Found"));
+
+        String token = UUID.randomUUID().toString();
+        Instant expiryDate = Instant.now().plus(24, ChronoUnit.HOURS);
+
+        PasswordResetToken resetToken = new PasswordResetToken(token, expiryDate, user);
+        passwordResetTokenRepository.save(resetToken);
+
+        String resetUrl = frontendURL + "reset-password?token=" + token;
+
+        emailService.sendPasswordResetEmail(user.getEmail(), resetUrl);
+
+    }
+
+    @Override
+    public void resetPassword(String token, String newPassword) {
+        PasswordResetToken resetToken = passwordResetTokenRepository.findByToken(token).orElseThrow(()-> new RuntimeException("Reset token is invalid"));
+
+        if(resetToken.isUsed()){
+            throw new RuntimeException("Password reset token has already been used");
+        }
+
+        if(resetToken.getExpiryDate().isBefore(Instant.now())){
+            throw new RuntimeException("Password reset token has expired");
+        }
+
+        User user = resetToken.getUser();
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+
+        resetToken.setUsed(true);
+        passwordResetTokenRepository.save(resetToken);
+    }
 
 
 }

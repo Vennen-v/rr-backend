@@ -67,12 +67,19 @@ public class User {
     @Column(name = "user_posts")
     private List<Comment> userComments = new ArrayList<>();
 
-    @ManyToMany
     @JsonIgnore
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "user_saves",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "post_id"))
     private List<Post> savedPosts;
 
-   @ManyToMany
+
    @JsonIgnore
+   @ManyToMany(cascade = CascadeType.ALL)
+   @JoinTable(name = "user_likes",
+           joinColumns = @JoinColumn(name = "user_id"),
+           inverseJoinColumns = @JoinColumn(name = "post_id"))
     private List<Post> likedPosts = new ArrayList<>();
 
     @OneToMany

@@ -44,7 +44,7 @@ public class Post {
 
     private Long likes = 0L;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
 
     private Long saves = 0L;
