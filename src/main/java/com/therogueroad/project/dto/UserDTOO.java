@@ -25,6 +25,8 @@ public class UserDTOO {
     private String profilePic;
     private List<PostNoUserDTO> userPosts;
     private List<UserDTO> followers;
+    private boolean emailVerified;
     private LocalDateTime createdAt;
+
 
 }

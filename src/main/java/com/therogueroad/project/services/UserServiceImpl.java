@@ -38,8 +38,13 @@ public class UserServiceImpl implements UserService{
     @Autowired
     private CommentRepository commentRepository;
 
+    @Autowired LikesService likesService;
+
     @Autowired
     private NotificationService notificationService;
+
+    @Autowired
+    private NotificationRepository notificationRepository;
 
     @Autowired
     private PasswordResetTokenRepository passwordResetTokenRepository;
@@ -293,6 +298,49 @@ return userResponse;
 
 
 
+    }
+
+    @Override
+    public void deleteOwnAccount(User user) {
+        emailVerificationTokenRepository.findAll().forEach(t -> {
+            if (t.getUser().equals(user)){
+        emailVerificationTokenRepository.delete(t);
+        }
+        });
+
+        passwordResetTokenRepository.findAll().forEach(t -> {
+            if (t.getUser().equals(user)){
+                passwordResetTokenRepository.delete(t);
+            }
+        });
+
+        notificationRepository.findAll().forEach(n -> {
+            if (n.getRecipient().equals(user.getUserId()) || n.getActor().equals(user.getUserName())){
+                notificationRepository.delete(n);
+            }
+        });
+
+        user.getUserPosts().forEach(p -> {
+            postService.deleteOwnPost(p.getPostId(), user);
+        });
+
+        postRepository.findAll().forEach(post -> {
+            if(user.getLikedPosts().contains(post)) {
+                likesService.removeLike(post.getPostId(), user);
+                postRepository.save(post);
+            }
+        });
+
+        user.getUserComments().clear();
+
+
+
+        user.getActedNotifs().clear();
+        user.getRecievedNotifs().clear();
+
+        userRepository.save(user);
+
+        userRepository.delete(user);
     }
 
 

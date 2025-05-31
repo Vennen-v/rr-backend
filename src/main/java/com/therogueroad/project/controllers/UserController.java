@@ -113,5 +113,13 @@ public class UserController {
         return new ResponseEntity<>(userService.getFollowingPosts(user), HttpStatus.OK);
     }
 
+    @DeleteMapping("/user/delete-self")
+    public ResponseEntity<String> deleteOwnAccount(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        User user = userRepository.findByUserName(userDetails.getUsername()).orElseThrow(() -> new RuntimeException("User Not Found"));
+        userService.deleteOwnAccount(user);
+        return new ResponseEntity<>("Account deleted successfully", HttpStatus.OK);
+
+    }
+
 
 }

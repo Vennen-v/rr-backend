@@ -155,6 +155,7 @@ public class PostServiceImpl implements PostService{
             List<User> userList = userRepository.findAll();
             userList.forEach(u -> {
                 u.getLikedPosts().remove(deletedPost);
+                u.getSavedPosts().remove(deletedPost);
                 userRepository.save(u);
             });
         postRepository.delete(deletedPost);

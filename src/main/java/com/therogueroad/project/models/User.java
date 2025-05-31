@@ -59,11 +59,11 @@ public class User {
     @Column(name = "profile_pic")
     private String profilePic = "https://img.freepik.com/premium-photo/icon-define-person-allocate-stylize-250_1137696-4300.jpg?semt=ais_hybrid&w=740";
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Column(name = "user_posts")
     private List<Post> userPosts = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Column(name = "user_posts")
     private List<Comment> userComments = new ArrayList<>();
 
@@ -92,10 +92,10 @@ public class User {
     @JsonIgnore
     private List<User> followers = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany( cascade = CascadeType.ALL)
     private List<Notification> recievedNotifs;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Notification> actedNotifs;
 
     @JsonIgnore

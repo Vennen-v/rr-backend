@@ -39,4 +39,6 @@ public interface UserService {
     void resetPassword(String token, String newPassword);
 
     void verifyEmail(String token);
+
+    void deleteOwnAccount(User user);
 }
